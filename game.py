@@ -1,5 +1,11 @@
+import json
+import os
+import time
+os.system('cls')
+
 #Intro Part
-print("You were having a dream where you were getting chase by something huge and black in an unfamiliar area.") 
+print("You were having a dream where you were getting chase by something huge and black in an unfamiliar area.")
+time.sleep(5) 
 print("You got scared and woke up.") 
 print("You look around to your surroundings.")
 print("It is very dark and very unfamiliar. It looks futuristic.") 
@@ -178,8 +184,63 @@ elif Area == "Ventilation Control":
     print("Then you heard noises coming out from the vent… ")
     print("The alien crawl through the vent and ended up at the ventilation control room!")
 
-else: Area == "Laboratory":
+elif Area == "Laboratory":
     print("You went to the Laboratory.")
     print("There is a tiny note left on a table with 6-digit PIN, is it some kind of password?")
     print("It written on the note: FCI-2026")
     print("There is a locked door in the laboratory.")
+
+
+# Main part
+
+
+
+
+
+
+
+
+
+# Function part
+
+# Typewriter effect function
+def typewrite(text, delay=0.03):
+    for char in text:
+        print(char, end="", flush=True)
+        time.sleep(delay)
+    print() 
+
+
+#screen function
+WIDTH = 80 
+def clear():
+    os.system('cls' if os.name == 'nt' else 'clear')
+
+def render(bag_items, narration, options):
+    clear()
+    
+    # --- TOP: Bag ---
+    print("-" * WIDTH)
+    print(f"  Bag: {', '.join(bag_items)}")
+    print("-" * WIDTH)
+    
+    # --- MIDDLE: Narration (right-aligned or centered) ---
+    print()
+    print(narration.rjust(WIDTH))  # or .center(WIDTH)
+    print()
+    
+    # --- BOTTOM: Options box ---
+    print("_" * WIDTH)
+    for option in options:
+        print(f"|  {option.ljust(WIDTH - 4)}|")
+    
+    # fill empty rows to keep box shape
+    filled = len(options)
+    for _ in range(4 - filled):
+        print(f"|{' ' * (WIDTH - 2)}|")
+    
+    print("|" + "_" * (WIDTH - 2) + "|")
+
+
+
+# art placeholder
