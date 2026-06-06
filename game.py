@@ -3,12 +3,12 @@ import os
 import time
 os.system('cls')
 
-#===============================================VARIABLES===========================================================
+#===============================================VARIABLES=========================================================
 #Typing animation speed
 TextSpeed = 0.025
 WIDTH = 80 
 
-#===============================================VARIABLES===========================================================
+#===============================================VARIABLES==========================================================
 
 
 #===============================================FUNCTION===========================================================
@@ -28,28 +28,29 @@ def render(bag_items, narration, options):
     clear()
     
     # --- TOP: Bag ---
-    say("-" * WIDTH)
-    say(f"  Bag: {', '.join(bag_items)}")
-    say("-" * WIDTH)
+    print("-" * WIDTH)
+    print(f"  Bag: {', '.join(bag_items)}")
+    print("-" * WIDTH)
     
     # --- MIDDLE: Narration (right-aligned or centered) ---
-    say()
+    print()
     say(narration.rjust(WIDTH))  # or .center(WIDTH)
-    say()
+    print()
     
     # --- BOTTOM: Options box ---
-    say("_" * WIDTH)
+    print("_" * WIDTH)
     for option in options:
-        say(f"|  {option.ljust(WIDTH - 4)}|")
+        print(f"|  {option.ljust(WIDTH - 4)}|")
     
     # fill empty rows to keep box shape
     filled = len(options)
     for _ in range(4 - filled):
-        say(f"|{' ' * (WIDTH - 2)}|")
+        print(f"|{' ' * (WIDTH - 2)}|")
     
-    say("|" + "_" * (WIDTH - 2) + "|")
+    print("|" + "_" * (WIDTH - 2) + "|")
 #===============================================FUNCTION===========================================================
 
+render([], "You were having a dream where you were getting chase by something huge and black in an unfamiliar area.", [])
 
 #START
 say("You were having a dream where you were getting chase by something huge and black in an unfamiliar area.")
@@ -157,7 +158,7 @@ if Keycard == "Yes":
     say("You took the keycard and put it in your pocket.")
 else:
     say("You left the keycard.")
-
+    
 #Map
 say("You saw a map on the wall.")
 say("A map for this spaceship!")
