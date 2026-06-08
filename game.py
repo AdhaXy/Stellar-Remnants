@@ -4,6 +4,7 @@ import threading
 import time
 os.system('cls')
 
+
 #===============================================VARIABLES=========================================================
 #Typing animation speed
 TextSpeed = 0.025
@@ -17,36 +18,6 @@ BLUE = "\033[34m"
 CYAN = "\033[36m"
 WHITE = "\033[37m"
 RESET = "\033[0m" 
-
-#===============================================Example of usage (Please read to understand)==========================================================
-
-# choice = render(   <--- the choice function
-#     bag_items=["Key"],
-#     narration="You are in a dark room.",
-#     options=["Go left", "Go right"]
-# )
-
-# if choice == "Go left":
-
-# print(f"{RED}You took damage!{RESET}") <--- example to change text color
-# say(f"{CYAN}{narration.rjust(WIDTH)}{RESET}")
-# print(f"{CYAN}You are in a dark room.{RESET}")
-
-# save_checkpoint({"name": Name, "area": "Nar1", "bag": []}, Name)
-
-# # After they pick a room
-# save_checkpoint({"name": Name, "area": "Laboratory", "bag": bag_items}, Name)
-
-# # After they pick up an item
-# save_checkpoint({"name": Name, "area": "Laboratory", "bag": bag_items}, Name)
-
-# Gives player 10 seconds to answer
-# choice = timed_input("  Choose: ", timeout=10)
-
-# if choice is None:
-#     say("You hesitated too long... something bad happens!")
-# elif choice == "Go left":
-#     say("You went left!")
 
 #===============================================FUNCTION===========================================================
 #Typing animation
@@ -153,6 +124,44 @@ def load_checkpoint(name):
             return json.load(f)
     return None
 
+def main_menu():
+    while True:
+        hor = True
+        say("1. New Game \n2. Load Game \n3. Delete Save")
+        choice = input("Choose an option: ")
+        while choice not in ["1", "2", "3"]:
+            choice = input("Invalid choice. Please choose 1, 2, or 3: ")
+        if choice == "1":
+            clear()
+            break
+        elif choice == "2":
+            while hor == True:
+                Name = input("Enter your name to load: ")
+                save = load_checkpoint(Name)
+                if save:
+                    say("Save file found! Loading game...")
+                    time.sleep(2)
+                    Area = save["area"]
+                    bag_items = save["bag"]
+                    break
+                else:
+                    say("No save file found with that name. Please try again.")
+                    hor = False
+                        
+        elif choice == "3":
+            while hor == True:
+                Name = input("Enter your name to delete save: ")
+                save_file = f"{Name}.json"
+                if os.path.exists(save_file):
+                    os.remove(save_file)
+                    say("Save file deleted.")
+                    time.sleep(2)
+                    clear()
+                    break
+                else:
+                    say("No save file found with that name. Please try again.")
+                    hor = False
+
 # Player makes a choice
 # Area = render(bag_items, narration, options)
 
@@ -171,7 +180,11 @@ def load_checkpoint(name):
 #     if choice.upper() == "Y":
 #         Area = save["area"]
 #         bag_items = save["bag"]
-#===============================================Story===========================================================x``
+#===============================================Story===========================================================
+
+
+SingleBox("Welcome to the game!", ask_input=True, prompt="Press enter to start...")
+main_menu()
 
 #START  <-- finish
 say("You were having a dream where you were getting chase by something huge and black in an unfamiliar area.")
@@ -180,7 +193,7 @@ say("You look around to your surroundings.")
 say("The place was dark and cold. You're in a small room with white walls and a single bed.") 
 say("You doesn't remember a single thing…")
 say("Who are you? Where are you at?")
-time.sleep(5)
+time.sleep(3)
 Name = SingleBox("You see an ID tag with your face beside you", ask_input=True, prompt="Enter your name: ")
 print("\n\n")
 say((("The ID Tag showing that you are known as " + Name).center(WIDTH)))
@@ -193,22 +206,24 @@ save_checkpoint({
 }, Name)
 time.sleep(3)
 
-# #Begin  <---this one next
-# say("You heard a loud banging and scratching sound coming from through the hallway.")
-# say("You decided to check on it. The light got cut off, where you find it hard to see what is up in front.")
-# say("The hallway is covered by many scratches and blood. You feel extremely uncomfortable.")
-# say("As you continue to walk down the hallway. You see a shadow up ahead, screeching and tearing something.")
-# say("It has a body size that is similar to a size of buff gymnastic.")
-# print("--------------------------------------------------------------------------------------------------------------------------------------------")
-# Action = input("What would you do? [Approach to it slowly and silently/Shout at it] ")
-# print("--------------------------------------------------------------------------------------------------------------------------------------------")
-# if Action == "Shout at it":
-#     say("You shout at the shadow. The shadow crawl quickly into your direction and jumped on you.")
-#     print("You got killed.")
-#     print("GAME OVER")
-#     exit()
-# else:    
-#     say("You slowly and silently approach to the shadow.") 
+
+#Begin  <---this one next
+say("You heard a loud banging and scratching sound coming from through the hallway.")
+say("You decided to check on it. The light got cut off, where you find it hard to see what is up in front.")
+say("The hallway is covered by many scratches and blood. You feel extremely uncomfortable.")
+say("As you continue to walk down the hallway. You see a shadow up ahead, screeching and tearing something.")
+say("It has a body size that is similar to a size of buff gymnastic.")
+while Action not in ["1", "2"]:
+    Action = input("What would you do? \n1. Approach to it slowly and silently \n2. Shout at it")
+    if Action == 2:
+        say("You shout at the shadow. The shadow crawl quickly into your direction and jumped on you.")
+        print("You got killed.")
+        print("GAME OVER")
+        exit()
+    elif Action == 1:   
+            say("You slowly and silently approach to the shadow.") 
+    else:
+        say("Invalid choice. Please choose 1 or 2.")
 
 # #Story Continues
 # say("You are trying to be as quiet as possible, hoping it won’t notice you.")
