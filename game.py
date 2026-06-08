@@ -140,14 +140,14 @@ def main_menu():
             choice = input("Invalid choice. Please choose 1, 2, or 3: ")
         if choice == "1":
             clear()
-            return None,None,[]
+            return None,None,[],"start"
         elif choice == "2":
             while hor == True:
                 Name = input("Enter your name to load: ")
                 save = load_checkpoint(Name)
                 if save:
                     say("Save file found! Loading game...")
-                    return save["name"], save["area"], save["bag"]
+                    return save["name"], save["area"], save["bag"], save["path"]
                 else:
                     say("No save file found with that name. Please try again.")
                     hor = False
@@ -184,7 +184,7 @@ def main_menu():
 
 
 SingleBox("Welcome to the game!", ask_input=True, prompt="Press enter to start...")
-Name, Area , bag_items= main_menu()
+Name, Area , bag_items, Path= main_menu()
 
 #START  <-- finish
 if Area is None:  # New Game
@@ -198,7 +198,7 @@ if Area is None:  # New Game
     Name = SingleBox("You see an ID tag with your face beside you", ask_input=True, prompt="Enter your name: ")
     print("\n\n")
     say((("The ID Tag showing that you are known as " + Name).center(WIDTH)))
-    save_checkpoint({"name": Name, "area": "Nar1", "bag": []}, Name) #save
+    save_checkpoint({"name": Name, "area": "Nar1", "bag": [], "path": Path}, Name) #save
     time.sleep(3)
 
 
@@ -213,7 +213,7 @@ if reached(Area, 1):
             options=["1. Approach to it slowly and silently", "2. Shout at it"])
         if Action == "1":
             say("You slowly and silently approach to the shadow.")
-            save_checkpoint({"name": Name, "area": "Nar2", "bag": []}, Name) #save
+            save_checkpoint({"name": Name, "area": "Nar2", "bag": [], "path": Path}, Name) #save
             break
         elif Action == "2":
             say("You shout at the shadow. The shadow crawl quickly into your direction and jumped on you.")
