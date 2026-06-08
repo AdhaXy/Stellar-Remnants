@@ -124,6 +124,13 @@ def load_checkpoint(name):
             return json.load(f)
     return None
 
+#related to checkpoint. basically the checkpoint numbering system.
+def reached(Area, checkpoint_num):
+    checkpoint = [None, "Nar1", "Nar2", "Nar3", "Nar4", "Nar5"]
+    if Area == None:
+        return True
+    return checkpoint.index(Area) <= checkpoint_num
+
 def main_menu():
     while True:
         hor = True
@@ -133,17 +140,14 @@ def main_menu():
             choice = input("Invalid choice. Please choose 1, 2, or 3: ")
         if choice == "1":
             clear()
-            break
+            return None,None,[]
         elif choice == "2":
             while hor == True:
                 Name = input("Enter your name to load: ")
                 save = load_checkpoint(Name)
                 if save:
                     say("Save file found! Loading game...")
-                    time.sleep(2)
-                    Area = save["area"]
-                    bag_items = save["bag"]
-                    break
+                    return save["name"], save["area"], save["bag"]
                 else:
                     say("No save file found with that name. Please try again.")
                     hor = False
@@ -175,57 +179,53 @@ def main_menu():
 # Name = input("Enter your name: ")
 # save = load_checkpoint(Name)
 
-# if save:
-#     choice = SingleBox("Save file found! Continue?", ask_input=True, prompt="Y/N: ")
-#     if choice.upper() == "Y":
-#         Area = save["area"]
-#         bag_items = save["bag"]
+
 #===============================================Story===========================================================
 
 
 SingleBox("Welcome to the game!", ask_input=True, prompt="Press enter to start...")
-main_menu()
+Name, Area , bag_items= main_menu()
 
 #START  <-- finish
-say("You were having a dream where you were getting chase by something huge and black in an unfamiliar area.")
-say("You got scared and woke up.") 
-say("You look around to your surroundings.")
-say("The place was dark and cold. You're in a small room with white walls and a single bed.") 
-say("You doesn't remember a single thing…")
-say("Who are you? Where are you at?")
-time.sleep(3)
-Name = SingleBox("You see an ID tag with your face beside you", ask_input=True, prompt="Enter your name: ")
-print("\n\n")
-say((("The ID Tag showing that you are known as " + Name).center(WIDTH)))
-
-# Save1
-save_checkpoint({
-    "name": Name,
-    "area": "Nar1",
-    "bag": [],
-}, Name)
-time.sleep(3)
+if Area is None:  # New Game
+    say("You were having a dream where you were getting chase by something huge and black in an unfamiliar area.")
+    say("You got scared and woke up.") 
+    say("You look around to your surroundings.")
+    say("The place was dark and cold. You're in a small room with white walls and a single bed.") 
+    say("You doesn't remember a single thing…")
+    say("Who are you? Where are you at?")
+    time.sleep(3)
+    Name = SingleBox("You see an ID tag with your face beside you", ask_input=True, prompt="Enter your name: ")
+    print("\n\n")
+    say((("The ID Tag showing that you are known as " + Name).center(WIDTH)))
+    save_checkpoint({"name": Name, "area": "Nar1", "bag": []}, Name) #save
+    time.sleep(3)
 
 
-#Begin  <---this one next
-say("You heard a loud banging and scratching sound coming from through the hallway.")
-say("You decided to check on it. The light got cut off, where you find it hard to see what is up in front.")
-say("The hallway is covered by many scratches and blood. You feel extremely uncomfortable.")
-say("As you continue to walk down the hallway. You see a shadow up ahead, screeching and tearing something.")
-say("It has a body size that is similar to a size of buff gymnastic.")
-while Action not in ["1", "2"]:
-    Action = input("What would you do? \n1. Approach to it slowly and silently \n2. Shout at it")
-    if Action == 2:
-        say("You shout at the shadow. The shadow crawl quickly into your direction and jumped on you.")
-        print("You got killed.")
-        print("GAME OVER")
-        exit()
-    elif Action == 1:   
-            say("You slowly and silently approach to the shadow.") 
-    else:
-        say("Invalid choice. Please choose 1 or 2.")
+if reached(Area, 1):
+    while True:
+        Action = render(bag_items=[],
+            narration="You heard a loud banging and scratching sound coming from through the hallway.\n" 
+            "You decided to check on it. The light got cut off, where you find it hard to see what is up in front.\n" 
+            "The hallway is covered by many scratches and blood. You feel extremely uncomfortable.\n" 
+            "As you continue to walk down the hallway. You see a shadow up ahead, screeching and tearing something.\n" 
+            "It has a body size that is similar to a size of buff gymnastic. What would you do?",
+            options=["1. Approach to it slowly and silently", "2. Shout at it"])
+        if Action == "1":
+            say("You slowly and silently approach to the shadow.")
+            save_checkpoint({"name": Name, "area": "Nar2", "bag": []}, Name) #save
+            break
+        elif Action == "2":
+            say("You shout at the shadow. The shadow crawl quickly into your direction and jumped on you.")
+            say("You got killed.")
+            say("GAME OVER")
+            time.sleep(3)
+            exit()
+        else:
+            say("Invalid choice. Please choose 1 or 2.")
 
-# #Story Continues
+
+# if reached(Area, 2):
 # say("You are trying to be as quiet as possible, hoping it won’t notice you.")
 # say("You see a huge black-in-colored aliens biting and tearing “your crewmates…?” bodies.")
 # say("You got shocked and scared. You decided to leave that area but you stepped on a piece of glass on the floor.")
@@ -390,3 +390,4 @@ while Action not in ["1", "2"]:
 
 
 # art placeholder
+
