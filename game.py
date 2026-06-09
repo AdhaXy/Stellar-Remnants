@@ -121,14 +121,14 @@ def SingleBox(text, ask_input=False, prompt=""):
 #save checkpoint and load checkpoint functions (Cross-platform paths) 
 def save_checkpoint(data, name):
     base_dir = os.path.dirname(os.path.abspath(__file__))
-    save_file = os.path.join(base_dir, f"{name}.json")
+    save_file = os.path.join(base_dir, "SaveFile", f"{name}.json")
     with open(save_file, "w") as file:
         json.dump(data, file)
     print("                                                                                                      Game saved!")
 
 def load_checkpoint(name):
     base_dir = os.path.dirname(os.path.abspath(__file__))
-    save_file = os.path.join(base_dir, f"{name}.json")
+    save_file = os.path.join(base_dir, "SaveFile", f"{name}.json")
     if os.path.exists(save_file):
         with open(save_file, "r") as file:
             return json.load(file)
