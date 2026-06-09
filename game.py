@@ -2,7 +2,9 @@ import json
 import os
 import threading
 import time
-os.system('cls')
+
+# Automatically detects OS and clears the terminal at the start
+os.system('clear' if os.name == 'posix' else 'cls')  
 
 
 #===============================================VARIABLES=========================================================
@@ -27,26 +29,26 @@ def say(text):
         time.sleep(TextSpeed)
     print()
 
-#Clear Terminal
+#Clear Terminal (Cross-platform)
 def clear():
-    os.system('cls' if os.name == 'nt' else 'clear')
+    os.system('clear' if os.name == 'posix' else 'cls')
 
 #timer function for input
-def timed_input(prompt, timeout=10):
-    result = [None]
+# def timed_input(prompt, timeout=10):
+#     result = [None]
     
-    def get_input():
-        result[0] = input(prompt)
+#     def get_input():
+#         result[0] = input(prompt)
     
-    thread = threading.Thread(target=get_input)
-    thread.daemon = True
-    thread.start()
-    thread.join(timeout)
+#     thread = threading.Thread(target=get_input)
+#     thread.daemon = True
+#     thread.start()
+#     thread.join(timeout)
     
-    if thread.is_alive():
-        print("\nTime's up!")
-        return None  # No input given
-    return result[0]
+#     if thread.is_alive():
+#         print("\nTime's up!")
+#         return None  # No input given
+#     return result[0]
 
 #Screen function  <--- the main screen supposedly 
 def render(bag_items, narration, options):
@@ -74,12 +76,10 @@ def render(bag_items, narration, options):
     
     print("|" + "_" * (WIDTH - 2) + "|")
 
-        # --- INPUT: Outside the box ---
+    # --- INPUT: Outside the box ---
     print("-" * WIDTH)
     choice = input("  Choose: ").strip()   
     return choice  # return it so you can use it
-# choice = timed_input(f"  Choose ({timeout}s): ", timeout=10) <-- will changed
-# return choice  
 
 #singular box  <---- ignore this.
 def SingleBox(text, ask_input=False, prompt=""):
@@ -110,24 +110,26 @@ def SingleBox(text, ask_input=False, prompt=""):
         print("+" + "-" * (WIDTH - 2) + "+")
         input("")
 
-#save checkpoint and load checkpoint functions  
+#save checkpoint and load checkpoint functions (Cross-platform paths) 
 def save_checkpoint(data, name):
-    save_file = f"{name}.json"
-    with open(save_file, "w") as f:
-        json.dump(data, f)
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    save_file = os.path.join(base_dir, f"{name}.json")
+    with open(save_file, "w") as file:
+        json.dump(data, file)
     print("                                                                                                      Game saved!")
 
 def load_checkpoint(name):
-    save_file = f"{name}.json"
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    save_file = os.path.join(base_dir, f"{name}.json")
     if os.path.exists(save_file):
-        with open(save_file, "r") as f:
-            return json.load(f)
+        with open(save_file, "r") as file:
+            return json.load(file)
     return None
 
 #related to checkpoint. basically the checkpoint numbering system.
 def reached(Area, checkpoint_num):
     checkpoint = [None, "Nar1", "Nar2", "Nar3", "Nar4", "Nar5"]
-    if Area == None:
+    if Area is None:
         return True
     return checkpoint.index(Area) <= checkpoint_num
 
@@ -140,7 +142,7 @@ def main_menu():
             choice = input("Invalid choice. Please choose 1, 2, or 3: ")
         if choice == "1":
             clear()
-            return None,None,[],"start"
+            return None, None, [], "start"
         elif choice == "2":
             while hor == True:
                 Name = input("Enter your name to load: ")
@@ -155,7 +157,8 @@ def main_menu():
         elif choice == "3":
             while hor == True:
                 Name = input("Enter your name to delete save: ")
-                save_file = f"{Name}.json"
+                base_dir = os.path.dirname(os.path.abspath(__file__))
+                save_file = os.path.join(base_dir, f"{Name}.json")
                 if os.path.exists(save_file):
                     os.remove(save_file)
                     say("Save file deleted.")
@@ -166,25 +169,10 @@ def main_menu():
                     say("No save file found with that name. Please try again.")
                     hor = False
 
-# Player makes a choice
-# Area = render(bag_items, narration, options)
-
-# Save right after
-# save_checkpoint({
-#     "name": Name,
-#     "area": Area,
-#     "bag": bag_items,
-# }, Name)
-
-# Name = input("Enter your name: ")
-# save = load_checkpoint(Name)
-
-
 #===============================================Story===========================================================
 
-
 SingleBox("Welcome to the game!", ask_input=True, prompt="Press enter to start...")
-Name, Area , bag_items, Path= main_menu()
+Name, Area, bag_items, Path = main_menu()
 
 #START  <-- finish
 if Area is None:  # New Game
@@ -225,31 +213,46 @@ if reached(Area, 1):
             say("Invalid choice. Please choose 1 or 2.")
 
 
-# if reached(Area, 2):
-# say("You are trying to be as quiet as possible, hoping it won’t notice you.")
-# say("You see a huge black-in-colored aliens biting and tearing “your crewmates…?” bodies.")
-# say("You got shocked and scared. You decided to leave that area but you stepped on a piece of glass on the floor.")
-# say("YOU MADE A SOUND.")
-# say("The alien look into your direction and scream at you!!!")
-# say("The alien starts to chase you. You begin to run… Very… Very fast…")
-# say("You are running as fast as you can, trying to get away from the alien.")
-# say("In this dark environment, you are unable to tell your current location, nor knowing where you can hide.")
-# say("You run everywhere where you are able to. The alien is chasing aggressively on all fours.") 
-# say("You ended up in a long hallway where it leads to a room at the end.")
-# print("--------------------------------------------------------------------------------------------------------------------------------------------")
-# Locker = input("During the run, you see a locker. [Hide/Run] ")
-# print("--------------------------------------------------------------------------------------------------------------------------------------------")
-# if Locker == "Hide":
-#     say("You hide in the locker and close the door.")
-#     say("The alien destroyed the locker as it is running through the hallway.") 
-#     print("You got killed.")
-#     print("GAME OVER")
-#     exit()
-# else:
-#     say("You decided to run into the room at the end instead of hiding in the locker.")
+if reached(Area, 2):
+    while True:
+         Action = render(bag_items=[],
+            narration="You are trying to be as quiet as possible, hoping it won’t notice you.\n" 
+            "You see a huge black-in-colored aliens biting and tearing “your crewmates…?” bodies.\n" 
+            "You got shocked and scared. You decided to leave that area but you stepped on a piece of glass on the floor.\n" 
+            "YOU MADE A SOUND.\n" 
+            "The alien look into your direction and scream at you!!!\n" 
+            "The alien starts to chase you. You begin to run… Very… Very fast…\n" 
+            "You are running as fast as you can, trying to get away from the alien.\n" 
+            "In this dark environment, you are unable to tell your current location, nor knowing where you can hide.\n" 
+            "You run everywhere where you are able to. The alien is chasing aggressively on all fours.\n" 
+            "You ended up in a long hallway where it leads to a room at the end. What would you do?",
+            options=["1. Hide in the locker", "2. Run into the room at the end"])
+         if Action == "1":
+             say("You hide in the locker and close the door.")
+             say("The alien destroyed the locker as it is running through the hallway.") 
+             say("You got killed.")
+             say("GAME OVER")
+             time.sleep(3)
+             exit()
+         elif Action == "2":
+             say("You decided to run into the room at the end instead of hiding in the locker.")
+             save_checkpoint({"name": Name, "area": "Nar3", "bag": [], "path": Path}, Name) #save
+             break
+         else:
+             say("Invalid choice. Please choose 1 or 2.")
 
 # #Story Continues
+if reached(Area, 3):
+    say("You run into the room at the end of the hallway and closed the door behind you.")
+    say("The alien is still chasing you at the back!")
+    save_checkpoint({"name": Name, "area": "Nar4", "bag": [], "path": Path}, Name) #save
 # say("Alien is still chasing you at the back!")
+if reached(Area, 4):
+     say("You are trying to catch your breath and calm down.")
+     say("The alien is still trying to get in.")
+     say("Dealing massive damage onto the door. Biting. Scratching. Screaming through the door.")
+     say("The door won’t last any longer…")
+     save_checkpoint({"name": Name, "area": "Nar5", "bag": [], "path": Path}, Name) #save
 # print("--------------------------------------------------------------------------------------------------------------------------------------------")
 # Door = input("Enter “Close the door”. ")
 # print("--------------------------------------------------------------------------------------------------------------------------------------------")
@@ -385,9 +388,4 @@ if reached(Area, 1):
 # Main part
 
 
-
-
-
-
 # art placeholder
-
