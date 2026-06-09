@@ -33,6 +33,14 @@ def say(text):
 def clear():
     os.system('clear' if os.name == 'posix' else 'cls')
 
+#Inventory
+def show_inventory(inventory):
+    if inventory:
+        print(f"  🎒 Inventory: {', '.join(inventory)}")
+    else:
+        print("  🎒 Inventory: (empty)")
+    print()
+
 #timer function for input
 # def timed_input(prompt, timeout=10):
 #     result = [None]
