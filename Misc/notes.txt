@@ -18,6 +18,7 @@ After they pick a room
 save_checkpoint({"name": Name, "area": "Laboratory", "bag": bag_items}, Name)
 
 After they pick up an item
+bag_items.append(andfnsdnf)
 save_checkpoint({"name": Name, "area": "Laboratory", "bag": bag_items}, Name)
 
 Gives player 10 seconds to answer
@@ -27,3 +28,21 @@ if choice is None:
     say("You hesitated too long... something bad happens!")
 elif choice == "Go left":
     say("You went left!")
+
+changed story:
+room=
+1.Laboratory - after vent no screw
+2.weaponary room - after vent yes screw
+3.main dock
+4.evacuation room
+5.friend room
+6._______ room
+7.vent - 2 path - screwdriver/no screwdriver
+
+item=
+1.weaponary Key for weaponary room
+2.fnotes - found in friend room - used for power up 'think of something adha'
+3.documents
+4.______ card
+5.______2nd card
+6.screwdriver - for vent

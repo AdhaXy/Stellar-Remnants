@@ -12,6 +12,7 @@ os.system('clear' if os.name == 'posix' else 'cls')
 TextSpeed = 0.025
 WIDTH = 120 
 BOX_HEIGHT = 10
+moveCounter = 0
 
 RED = "\033[31m"
 GREEN = "\033[32m"
@@ -57,6 +58,12 @@ def timed_input(prompt, timeout=10):
         print("\nTime's up!")
         return None  # No input given
     return result[0]
+
+# dedicated bag when not using render
+def bag(bag_items):
+    print("-" * WIDTH)
+    print(f"  Bag: {', '.join(bag_items)}")
+    print("-" * WIDTH)
 
 #Screen function  <--- the main screen supposedly 
 def render(bag_items, narration, options, timeout=None):
@@ -130,7 +137,7 @@ def load_checkpoint(name):
 
 #related to checkpoint. basically the checkpoint numbering system.
 def reached(Area, checkpoint_num):
-    checkpoint = [None, "Nar1", "Nar2", "Nar3", "Nar4", "Nar5"]
+    checkpoint = [None, "Nar1", "Nar2", "Nar3", "Nar4", "Nar5", "Nar6"]
     if Area is None:
         return True
     return checkpoint.index(Area) <= checkpoint_num
@@ -219,16 +226,15 @@ if reached(Area, 2):
     while True:
         Action = render(bag_items=bag_items,
             narration="You are trying to be as quiet as possible, hoping it won’t notice you.\n" 
-            "You see a huge black-in-colored aliens biting and tearing “your crewmates…?” bodies.\n" 
+            "You see a huge black-in-colored aliens biting and tearing apart body.\n" 
             "You got shocked and scared. You decided to leave that area but you stepped on a piece of glass on the floor.\n" 
             "YOU MADE A SOUND.\n" 
-            "The alien look into your direction and scream at you!!!\n" 
-            "The alien starts to chase you. You begin to run… Very… Very fast…\n" 
-            "You are running as fast as you can, trying to get away from the alien.\n" 
-            "In this dark environment, you are unable to tell your current location, nor knowing where you can hide.\n" 
-            "You run everywhere where you are able to. The alien is chasing aggressively on all fours.\n" 
-            "You ended up in a long hallway where it leads to a room at the end. What would you do?",
-            options=["1.hide into the locker after the corner"," 2.Run into the nearest room "],timeout=10)
+            "The alien look into your direction and start chasing you.\n" 
+            "You start to run as fast as you can.\n" 
+            "You see a corner ahead and take your chance to lost the monster.\n" 
+            "There's a locker in front of you and a door just a few meters away.\n" 
+            "What will you do? Hide now or try to get into the room and a risk getting caught by the monster.\n",
+            options=["1.hide into the locker after the corner","2.Run into the room a few meters away"],timeout=10)
         if Action == None:
             say("you missed every hiding spot and got into a dead end" \
             "\nGame Over")
@@ -237,12 +243,13 @@ if reached(Area, 2):
         elif Action == "1":
             say("You hide in the locker and close the door." \
             "\nThe alien passed you" \
-            "\nyou're saved\nYou found an item and got into the room nearest to you")
-            bag_items.append("Weaponary key")
+            "\nyou're saved\nYou found an item in the locker and got into the room nearest to you")
+            if "weaponary_key" not in bag_items:
+                bag_items.append("weaponary_key")
             save_checkpoint({"name": Name,"area":"Nar3", "bag":bag_items, "path": Path},Name)
             break
         elif Action == "2":
-            say("You decided to run into the room at the end instead of hiding in the locker.")
+            say("you got into the room before the monster pass the corner")
             save_checkpoint({"name": Name, "area": "Nar3", "bag":bag_items, "path": Path}, Name) #save
             break
         else:
@@ -250,16 +257,61 @@ if reached(Area, 2):
 
 # #Story Continues
 if reached(Area, 3):
-    say("You run into the room at the end of the hallway and closed the door behind you.")
-    say("The alien is still chasing you at the back!")
-    save_checkpoint({"name": Name, "area": "Nar4", "bag":bag_items, "path": Path}, Name) #save
+    if "weaponary_key" in bag_items:
+        say("you found a weaponary key when you were hiding in the locker earlier! you keep it in case you need it later.")
+        time.sleep(2)
+    say("You are saved for now. you catch your breath and calm down.")
+    time.sleep(2)
+    moveCounter = 2
+    while moveCounter > 0:
+        Action = render(bag_items=bag_items,
+            narration="You scan the room in search for anything useful.\n" \
+            "There's a chest in the room. A bed. A table.",
+            options=["1.Open the chest","2.Check the bed","3.Check the table"])
+        
+        if Action == "1":
+            say("You opened the chest and found nothing but clothes. you didn't take it.")
+            moveCounter -= 1
+            time.sleep(3)
+        elif Action == "2":
+            say("You checked the bed and found a screwdriver. you take it with you.")
+            if "screwdriver" not in bag_items:
+                bag_items.append("screwdriver")
+            moveCounter -= 1
+            time.sleep(3)
+        elif Action == "3":
+            say("You checked the table and found your someone notes. you didn't take it with you.")
+            moveCounter -= 1
+            time.sleep(3)
+        else:
+            say("Invalid choice. Please choose 1, 2, or 3.")
+    say("You hear a scratching sound from the door.\n" \
+    "You noticed a vent beside the chest.") 
+    time.sleep(1)
+    say("you went to the vent and hear a crashing noise behind you.\n" \
+    "You pick up the pace")
+    save_checkpoint({"name": Name, "area": "Nar4", "bag":bag_items, "path": Path}, Name)
+    time.sleep(4) #save
+
 # say("Alien is still chasing you at the back!")
 if reached(Area, 4):
-    say("You are trying to catch your breath and calm down.")
-    say("The alien is still trying to get in.")
-    say("Dealing massive damage onto the door. Biting. Scratching. Screaming through the door.")
-    say("The door won’t last any longer…")
+    clear()
+    bag(bag_items)
+    say("you found an exit!")
+    time.sleep(3)
+    if "screwdriver" in bag_items:
+        say("The vent door open and you crawled out of the vent.")
+        Path = "weaponary_room"
+        time.sleep(2)
+    else:
+        say("The vent door can't be open.\n" \
+        "You tried other exit.")
+        time.sleep(2)
+        say("You found another exit and crawled out of the vent.")
+        Path = "laboratory"
+        time.sleep(2)
     save_checkpoint({"name": Name, "area": "Nar5", "bag":bag_items, "path": Path}, Name) #save
+
 # print("--------------------------------------------------------------------------------------------------------------------------------------------")
 # Door = input("Enter “Close the door”. ")
 # print("--------------------------------------------------------------------------------------------------------------------------------------------")
