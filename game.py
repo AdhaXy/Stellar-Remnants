@@ -121,7 +121,7 @@ def SingleBox(text, ask_input=False, prompt=""):
         for _ in range(BOX_HEIGHT // 2 - 1):
             print("|" + " " * (WIDTH - 2) + "|")
         print("+" + "-" * (WIDTH - 2) + "+")
-        input("")
+        time.sleep(3)
 
 #save checkpoint and load checkpoint functions (Cross-platform paths) 
 def save_checkpoint(data, name):
@@ -190,7 +190,7 @@ def main_menu():
                     temp = False
 
 def gameOver():
-    input = input("Would you like to retry? (y/n): ")
+    input = input("Would you like to retry? (Yes : y/No : n): ")
     input2 = input.lower()
 
     while input2 not in ["y", "n"]:
@@ -222,7 +222,7 @@ def intro():
         Name = SingleBox("You see an ID tag with your face beside you", ask_input=True, prompt="Enter your name: ")
 
         #Letting the user confirm their name
-        confirm = str(input("Confirm name? (y/n): "))
+        confirm = str(input("Confirm name? (yes : y/no : n): "))
         confirm2 = confirm.lower()
         while confirm2 not in ["y", "n"]:
             print("Invalid choice, please enter y/n")
@@ -264,8 +264,6 @@ def nar1():
                 say("GAME OVER")
                 time.sleep(3)
                 exit()
-            else:
-                pass
 
 def nar2():
     if reached(Area, 2):
@@ -290,7 +288,7 @@ def nar2():
             elif Action == "1":
                 say("You hide in the locker and close the door." \
                 "\nThe alien passed you" \
-                "\nyou're saved\nYou found an item in the locker and got into the room nearest to you")
+                "\nyou're saved.\nYou found an item in the locker and got into the room nearest to you.")
                 if "weaponary_key" not in bag_items:
                     bag_items.append("weaponary_key")
                 save_checkpoint({"name": Name,"area":"Nar3", "bag":bag_items, "path": Path},Name)
@@ -345,8 +343,9 @@ def nar3():
         time.sleep(4) #save
 
 
-# say("Alien is still chasing you at the back!")
+#("Alien is still chasing you at the back!")
 def nar4():
+    global Path
     if reached(Area, 4):
         clear()
         bag(bag_items)
@@ -367,9 +366,10 @@ def nar4():
 
 def nar5():
     if reached(Area,5):
-        if Path == "weaponary room":
-            clear()
-            bag(bag_items)
+        global Path
+        clear()
+        bag(bag_items)
+        if Path == "weaponary_room":
             say("The room was in shambled.\n" \
             "Dead bodies and scattered weapon.\n" \
             "You know what you got to do.\n" \
@@ -385,9 +385,69 @@ def nar5():
                 
                 if Action == "1":
                     if "weaponary_key" in bag_items:
-                        bag()
+                        say("The key you found earlier fits the chest.\n" \
+                        "You opened it and found NTW-20.\n" \
+                        "You took it with you.")
+                        if "NTW-20" not in bag_items:
+                            bag_items.append("NTW-20")
+                        bag_items.remove("weaponary_key")
                     else:
-                        pass
+                        say("The chest is locked.\n" \
+                        "You tried smashing it.")
+                        chance = random.random()
+                        if chance < 0.5:
+                            say("You cracked the chest open and found NTW-20.\n" \
+                            "you took it with you.")
+                            if "NTW-20" not in bag_items:
+                                bag_items.append("NTW-20")
+                        else:
+                            say("you failed to open the chest.")
+                    moveCounter -= 1
+                elif Action == "2":
+                    say("You took the gun with you.")
+                    if "gun" not in bag_items:
+                        bag_items.append("gun")
+                    moveCounter -= 1
+                elif Action == "3":
+                    say("You checked the armour shelf and found a kevlar vest.\n" \
+                    "You took it with you.")
+                    if "vest" not in bag_items:
+                        bag_items.append("vest")
+                    moveCounter -= 1
+                else:
+                    say("Invalid choice. Please choose 1, 2, or 3.")
+        if Path == "laboratory":
+            say("The landed on your feet.\n" \
+            "The room looks like a laboratory or some sort.\n" \
+            "There's a broken incubator, messed up table, dead scientist")
+            moveCounter =2
+            while moveCounter > 0:
+                Action = render(bag_items=bag_items,
+                    narration="What will you do?",
+                    options=["1.Check the incubator","2.Check the table","3.Check the scientist"])
+
+                if Action == "1":
+                    say("You check out the incubator.\n" \
+                    "There is nothing interesting there other than green slimy liquid")
+                    moveCounter -= 1
+                    time.sleep(2)
+                elif Action == "2":
+                    say("You check out the messy table and found some documents.\n" \
+                    "The alien name is __________ and its weakness is _________ .")
+                    if "documents" not in bag_items:
+                        bag_items.append("documents")
+                    moveCounter -= 1
+                    time.sleep(2)
+                elif Action == "3":
+                    say("You check out the scientist.\n" \
+                    "The scientist was still alive surprisingly and grab your arm.\n" \
+                    "he says to take the documents before dying")
+                    moveCounter -= 1
+                    time.sleep(2)
+            say("The monster is going through the vent.\n" \
+            "You leaved the room...")
+        save_checkpoint({"name":Name, "area":"Nar6", "bag":bag_items, "path":Path}, Name)
+                
 
 # print("--------------------------------------------------------------------------------------------------------------------------------------------")
 # Door = input("Enter “Close the door”. ")
@@ -527,6 +587,7 @@ nar1()
 nar2()
 nar3()
 nar4()
+nar5()
 
 # art placeholder
 
