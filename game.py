@@ -3,6 +3,8 @@ import os
 import threading
 import time
 import random
+import textwrap
+from pathlib import Path
 
 # Automatically detects OS and clears the terminal at the start
 os.system('clear' if os.name == 'posix' else 'cls')  
@@ -10,7 +12,7 @@ os.system('clear' if os.name == 'posix' else 'cls')
 
 #===============================================VARIABLES=========================================================
 #Typing animation speed
-TextSpeed = 0.025
+TextSpeed = 0.03
 WIDTH = 120 
 BOX_HEIGHT = 10
 moveCounter = 0
@@ -22,6 +24,7 @@ BLUE = "\033[34m"
 CYAN = "\033[36m"
 WHITE = "\033[37m"
 RESET = "\033[0m" 
+#===============================================VARIABLES=========================================================
 
 #===============================================FUNCTION===========================================================
 #Typing animation
@@ -102,7 +105,7 @@ def SingleBox(text, ask_input=False, prompt=""):
         print("|" + " " * (WIDTH - 2) + "|")
     
     # Text row (centered)
-    say(f"|  {text.center(WIDTH - 4)} |")
+    print(f"|  {text.center(WIDTH - 4)} |")
     
     # Empty row between text and input
     print("|" + " " * (WIDTH - 2) + "|")
@@ -145,7 +148,7 @@ def reached(Area, checkpoint_num):
 
 def main_menu():
     while True:
-        hor = True
+        temp = True
         say("1. New Game \n2. Load Game \n3. Delete Save")
         choice = input("Choose an option: ")
         while choice not in ["1", "2", "3"]:
@@ -154,7 +157,11 @@ def main_menu():
             clear()
             return None, None, [], "start"
         elif choice == "2":
-            while hor == True:
+            while temp == True:
+                print("\n")
+                print("Available save files:")
+                for file in Path("SaveFile").glob("*.json"):
+                    print(f" - {file.stem}")
                 Name = input("Enter your name to load: ")
                 save = load_checkpoint(Name)
                 if save:
@@ -162,10 +169,13 @@ def main_menu():
                     return save["name"], save["area"], save["bag"], save["path"]
                 else:
                     say("No save file found with that name. Please try again.")
-                    hor = False
+                    temp = False
                         
         elif choice == "3":
-            while hor == True:
+            while temp == True:
+                print("Available save files:")
+                for file in Path("SaveFile").glob("*.json"):
+                    print(f" - {file.stem}")
                 Name = input("Enter your name to delete save: ")
                 base_dir = os.path.dirname(os.path.abspath(__file__))
                 save_file = os.path.join(base_dir,"SaveFile", f"{Name}.json")
@@ -177,7 +187,22 @@ def main_menu():
                     break
                 else:
                     say("No save file found with that name. Please try again.")
-                    hor = False
+                    temp = False
+
+def gameOver():
+    input = input("Would you like to retry? (y/n): ")
+    input2 = input.lower()
+
+    while input2 not in ["y", "n"]:
+        input = input("Invalid input. Please enter 'y' or 'n'")
+        input2 = input.lower()
+    
+    if input2 == "y":
+        pass
+    #im gonna pause here please someone help figure how to loop it if not idc ill sitll do it
+    
+
+#===============================================FUNCTION===========================================================
 
 #===============================================Story===========================================================
 
@@ -195,6 +220,19 @@ def intro():
         say("Who are you? Where are you at?")
         time.sleep(3)
         Name = SingleBox("You see an ID tag with your face beside you", ask_input=True, prompt="Enter your name: ")
+
+        #Letting the user confirm their name
+        confirm = str(input("Confirm name? (y/n): "))
+        confirm2 = confirm.lower()
+        while confirm2 not in ["y", "n"]:
+            print("Invalid choice, please enter y/n")
+            confirm = str(input("Confirm name? (y/n): "))
+            confirm2 = confirm.lower()
+        if confirm2 == "y":
+            Name = Name
+        elif confirm == "n":
+            Name = input("Last try to enter your name: ")
+    
         print("\n\n")
         say((("The ID Tag showing that you are known as " + Name).center(WIDTH)))
         save_checkpoint({"name": Name, "area": "Nar1", "bag":bag_items, "path": Path}, Name) #save
@@ -210,18 +248,24 @@ def nar1():
                 "As you continue to walk down the hallway. You see a shadow up ahead, screeching and tearing something.\n" 
                 "It has a body size that is similar to a size of buff gymnastic. What would you do?",
                 options=["1. Approach to it slowly and silently", "2. Shout at it"])
+            
+            while Action not in ["1", "2"]:
+                Action = input("Invalid choice. Please choose 1 or 2: ")
+
             if Action == "1":
                 say("You slowly and silently approach to the shadow.")
                 save_checkpoint({"name": Name, "area": "Nar2", "bag":bag_items, "path": Path}, Name) #save
                 break
             elif Action == "2":
                 say("You shout at the shadow. The shadow crawl quickly into your direction and jumped on you.")
+                time.sleep(2)
                 say("You got killed.")
+                time.sleep(2)
                 say("GAME OVER")
                 time.sleep(3)
                 exit()
             else:
-                say("Invalid choice. Please choose 1 or 2.")
+                pass
 
 def nar2():
     if reached(Area, 2):
@@ -237,6 +281,7 @@ def nar2():
                 "There's a locker in front of you and a door just a few meters away.\n" 
                 "What will you do? Hide now or try to get into the room and a risk getting caught by the monster.\n",
                 options=["1.hide into the locker after the corner","2.Run into the room a few meters away"],timeout=10)
+                
             if Action == None:
                 say("you missed every hiding spot and got into a dead end" \
                 "\nGame Over")
@@ -341,7 +386,8 @@ def nar5():
                 if Action == "1":
                     if "weaponary_key" in bag_items:
                         bag()
-                    elif
+                    else:
+                        pass
 
 # print("--------------------------------------------------------------------------------------------------------------------------------------------")
 # Door = input("Enter “Close the door”. ")
