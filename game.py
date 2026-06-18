@@ -2,6 +2,7 @@ import json
 import os
 import threading
 import time
+import random
 
 # Automatically detects OS and clears the terminal at the start
 os.system('clear' if os.name == 'posix' else 'cls')  
@@ -260,7 +261,7 @@ def nar2():
 def nar3():
     if reached(Area, 3):
         if "weaponary_key" in bag_items:
-            say("you found a weaponary key when you were hiding in the locker earlier! you keep it in case you need it later.")
+            say("you found a key when you were hiding in the locker earlier! you keep it in case you need it later.")
             time.sleep(2)
         say("You are saved for now. you catch your breath and calm down.")
         time.sleep(2)
@@ -282,7 +283,10 @@ def nar3():
                 moveCounter -= 1
                 time.sleep(3)
             elif Action == "3":
-                say("You checked the table and found your someone notes. you didn't take it with you.")
+                say("You checked the table and found someone notes. It says 'NTW-2# ### high cha### #### CGT-22##.\n" \
+                "You take notes of this.")
+                if "Notes" not in bag_items:
+                    bag_items.append("Notes")
                 moveCounter -= 1
                 time.sleep(3)
             else:
@@ -315,6 +319,29 @@ def nar4():
             Path = "laboratory"
             time.sleep(2)
         save_checkpoint({"name": Name, "area": "Nar5", "bag":bag_items, "path": Path}, Name) #save
+
+def nar5():
+    if reached(Area,5):
+        if Path == "weaponary room":
+            clear()
+            bag(bag_items)
+            say("The room was in shambled.\n" \
+            "Dead bodies and scattered weapon.\n" \
+            "You know what you got to do.\n" \
+            "There's gun from the guard, a chest, armour shelf")
+            if "Notes" in bag_items :
+                SingleBox("You see the chest has NTW-20 labeled on it")
+                time.sleep(3)
+            moveCounter = 2
+            while moveCounter > 0:
+                Action = render(bag_items=bag_items,
+                    narration="What will you do?",
+                    options=["1.Check the chest","2.Take the gun","3.Check the armour shelf"])
+                
+                if Action == "1":
+                    if "weaponary_key" in bag_items:
+                        bag()
+                    elif
 
 # print("--------------------------------------------------------------------------------------------------------------------------------------------")
 # Door = input("Enter “Close the door”. ")
