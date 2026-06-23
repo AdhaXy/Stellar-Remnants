@@ -211,6 +211,7 @@ Name, Area, bag_items, Path = main_menu()
 
 #START  <-- finish
 def intro():
+    global Name 
     if Area is None:  # New Game
         say("You were having a dream where you were getting chase by something huge and black in an unfamiliar area.")
         say("You got scared and woke up.") 
@@ -370,84 +371,160 @@ def nar5():
         clear()
         bag(bag_items)
         if Path == "weaponary_room":
-            say("The room was in shambled.\n" \
-            "Dead bodies and scattered weapon.\n" \
-            "You know what you got to do.\n" \
-            "There's gun from the guard, a chest, armour shelf")
-            if "Notes" in bag_items :
-                SingleBox("You see the chest has NTW-20 labeled on it")
-                time.sleep(3)
-            moveCounter = 2
-            while moveCounter > 0:
-                Action = render(bag_items=bag_items,
-                    narration="What will you do?",
-                    options=["1.Check the chest","2.Take the gun","3.Check the armour shelf"])
-                
-                if Action == "1":
-                    if "weaponary_key" in bag_items:
-                        say("The key you found earlier fits the chest.\n" \
-                        "You opened it and found NTW-20.\n" \
-                        "You took it with you.")
-                        if "NTW-20" not in bag_items:
-                            bag_items.append("NTW-20")
-                        bag_items.remove("weaponary_key")
-                    else:
-                        say("The chest is locked.\n" \
-                        "You tried smashing it.")
-                        chance = random.random()
-                        if chance < 0.5:
-                            say("You cracked the chest open and found NTW-20.\n" \
-                            "you took it with you.")
-                            if "NTW-20" not in bag_items:
-                                bag_items.append("NTW-20")
-                        else:
-                            say("you failed to open the chest.")
-                    moveCounter -= 1
-                elif Action == "2":
-                    say("You took the gun with you.")
-                    if "gun" not in bag_items:
-                        bag_items.append("gun")
-                    moveCounter -= 1
-                elif Action == "3":
-                    say("You checked the armour shelf and found a kevlar vest.\n" \
-                    "You took it with you.")
-                    if "vest" not in bag_items:
-                        bag_items.append("vest")
-                    moveCounter -= 1
-                else:
-                    say("Invalid choice. Please choose 1, 2, or 3.")
+            weaponary_room()
         if Path == "laboratory":
-            say("The landed on your feet.\n" \
-            "The room looks like a laboratory or some sort.\n" \
-            "There's a broken incubator, messed up table, dead scientist")
-            moveCounter =2
-            while moveCounter > 0:
-                Action = render(bag_items=bag_items,
-                    narration="What will you do?",
-                    options=["1.Check the incubator","2.Check the table","3.Check the scientist"])
-
-                if Action == "1":
-                    say("You check out the incubator.\n" \
-                    "There is nothing interesting there other than green slimy liquid")
-                    moveCounter -= 1
-                    time.sleep(2)
-                elif Action == "2":
-                    say("You check out the messy table and found some documents.\n" \
-                    "The alien name is __________ and its weakness is _________ .")
-                    if "documents" not in bag_items:
-                        bag_items.append("documents")
-                    moveCounter -= 1
-                    time.sleep(2)
-                elif Action == "3":
-                    say("You check out the scientist.\n" \
-                    "The scientist was still alive surprisingly and grab your arm.\n" \
-                    "he says to take the documents before dying")
-                    moveCounter -= 1
-                    time.sleep(2)
-            say("The monster is going through the vent.\n" \
-            "You leaved the room...")
+            laboratory()
+        say("\nYou hear a sound coming from the vent.\n" \
+        "You get out of the room quickly.")
+        time.sleep(3)
+        say("You see a big door and got into the room.\n" \
+        "It was a big room, like a bridge or control room.")
+        time.sleep(2)
+        say("There's a shiny thing at the table")
+        say("You found a keycard with a security labeled on it")
+        time.sleep(3)
         save_checkpoint({"name":Name, "area":"Nar6", "bag":bag_items, "path":Path}, Name)
+    
+def nar6():
+    if reached(Area,6):
+        global Path
+        clear()
+        bag(bag_items)
+        say("You take the keycard in case you need it")
+        if "keycard" not in bag_items:
+            bag_items.append("keycard")
+        time.sleep(2)
+
+        
                 
+def weaponary_room():
+    say("The room was in shambled.\n" \
+    "Dead bodies and scattered weapon.\n" \
+    "You know what you got to do.\n" \
+    "There's gun from the guard, a chest, armour shelf")
+    if "Notes" in bag_items :
+        SingleBox("You see the chest has NTW-20 labeled on it")
+        time.sleep(3)
+    moveCounter = 2
+    while moveCounter > 0:
+        Action = render(bag_items=bag_items,
+            narration="What will you do?",
+            options=["1.Check the chest","2.Take the gun","3.Check the armour shelf"])
+        
+        if Action == "1":
+            if "weaponary_key" in bag_items:
+                say("The key you found earlier fits the chest.\n" \
+                "You opened it and found NTW-20.\n" \
+                "You took it with you.")
+                if "NTW-20" not in bag_items:
+                    bag_items.append("NTW-20")
+                bag_items.remove("weaponary_key")
+            else:
+                say("The chest is locked.\n" \
+                "You tried smashing it.")
+                chance = random.random()
+                if chance < 0.5:
+                    say("You cracked the chest open and found NTW-20.\n" \
+                    "you took it with you.")
+                    if "NTW-20" not in bag_items:
+                        bag_items.append("NTW-20")
+                else:
+                    say("you failed to open the chest.")
+            moveCounter -= 1
+        elif Action == "2":
+            say("You took the gun with you.")
+            if "gun" not in bag_items:
+                bag_items.append("gun")
+            moveCounter -= 1
+        elif Action == "3":
+            say("You checked the armour shelf and found a kevlar vest.\n" \
+            "You took it with you.")
+            if "vest" not in bag_items:
+                bag_items.append("vest")
+            moveCounter -= 1
+        else:
+            say("Invalid choice. Please choose 1, 2, or 3.")
+
+def laboratory():
+    say("You landed on your feet.\n" \
+    "The room looks like a laboratory or some sort.\n" \
+    "There's a broken incubator, messed up table, dead scientist")
+    time.sleep(5)
+    moveCounter =2
+    while moveCounter > 0:
+        Action = render(bag_items=bag_items,
+            narration="What will you do?",
+            options=["1.Check the incubator","2.Check the table","3.Check the scientist"])
+
+        if Action == "1":
+            say("You check out the incubator.\n" \
+            "There is nothing interesting there other than green slimy liquid")
+            moveCounter -= 1
+            time.sleep(2)
+        elif Action == "2":
+            say("You check out the messy table and found some documents.\n" \
+            "The alien name is __________ and its weakness is _________ .")
+            if "documents" not in bag_items:
+                bag_items.append("documents")
+            moveCounter -= 1
+            time.sleep(2)
+        elif Action == "3":
+            say("You check out the scientist.\n" \
+            "The scientist was still alive surprisingly and grab your arm.\n" \
+            "he says to take the documents before dying.\n" \
+            "You take note of this.")
+            moveCounter -= 1
+            time.sleep(2)
+        else:
+            say("invalid choice. Choose 1, 2 or 3")
+
+def security_room():
+    say("You opened the door with the security card you found at the bridge")
+    time.sleep(2)
+    say("The room was a real messed.\n" \
+    "It's like a massacre has happened here.")
+    time.sleep(2)
+    say("You checked the CCTV and see a jet at a dock and a monster walked past supplies room")
+    say("There's a button that open up the dock, a key for FC-112 the jet at the dock and some sort of fuse.")
+    time.sleep(5)
+    moveCounter=3
+    while moveCounter > 0:
+        Action = render(bag_items=bag_items
+            narration="What will you do?",
+            options=["1.press the dock button","2.take the key","3.take the fuse","4.Check the CCTV"])
+        
+        if Action == "1":
+            say("the gate of the dock has opened.")
+            if "gate_dock" not in bag_items:
+                bag_items.append("gate_dock")
+            moveCounter -= 1
+            time.sleep(2)
+        elif Action == "2":
+            say("You take the jet key.")
+            if "jet_key" not in bag_items:
+                bag_items.append("jet_key")
+            moveCounter -= 1
+            time.sleep(2)
+        elif Action == "3":
+            say("You take the fuse with you.")
+            if "fuse" not in bag_items:
+                bag_items.append("fuse")
+            moveCounter -= 1
+            time.sleep(2)
+        elif Action == "4":
+            say("You checked the CCTV again.")
+            time.sleep(2)
+            say("The monster was at different place.")
+            moveCounter -= 1
+            time.sleep(2)
+        else:
+            say("invalid choice. Please choose 1, 2, 3 or 4")
+
+def supply_room():
+    say("You arrived at supplies room.")
+    time.sleep(2)
+    say("The room was a messed")
+    
 
 # print("--------------------------------------------------------------------------------------------------------------------------------------------")
 # Door = input("Enter “Close the door”. ")

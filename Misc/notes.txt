@@ -31,18 +31,23 @@ elif choice == "Go left":
 
 changed story:
 room=
-1.Laboratory - after vent no screw
-2.weaponary room - after vent yes screw
-3.main dock
-4.evacuation room
-5.friend room
-6._______ room
-7.vent - 2 path - screwdriver/no screwdriver
+-1-.Laboratory - after vent no screw <ok> - document -> bridge
+-2-.weaponary room - after vent yes screw <ok> - gun/NTW-20/vest -> bridge
+3.bridge <ok> - keycard security - hub
+4.evacuation room - need fuse (remind) - puzzle here - 
+(5).dock - locked until ending - open when find certain item.
+-6-.friend room <ok> - screwdriver
+7.security room - fuse - dock button - FC-112 key(jet on dock) - waste move
+-8-.vent - 2 path - screwdriver/no screwdriver
+9.supplies room - bomb(suicide ending) - vest(if not picked) - if document remind = smokebomb(distractEndingKillmonster)
+
+
+3 ending - dock(escaped) - evacuation(killed the monster) - bridge(ship explode)
 
 item=
 1.weaponary Key for weaponary room
-2.fnotes - found in friend room - used for power up 'think of something adha'
-3.documents
+2.fnotes - found in friend room - <ok>
+3.documents <ok>
 4.______ card
 5.______2nd card
 6.screwdriver - for vent
