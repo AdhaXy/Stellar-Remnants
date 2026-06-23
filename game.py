@@ -38,13 +38,7 @@ def say(text):
 def clear():
     os.system('clear' if os.name == 'posix' else 'cls')
 
-#Inventory
-def show_inventory(inventory):
-    if inventory:
-        print(f"  🎒 Inventory: {', '.join(inventory)}")
-    else:
-        print("  🎒 Inventory: (empty)")
-    print()
+
 
 #timer function for input
 def timed_input(prompt, timeout=10):
@@ -151,12 +145,25 @@ def main_menu():
         temp = True
         say("1. New Game \n2. Load Game \n3. Delete Save")
         choice = input("Choose an option: ")
+
         while choice not in ["1", "2", "3"]:
             choice = input("Invalid choice. Please choose 1, 2, or 3: ")
-        if choice == "1":
-            clear()
-            return None, None, [], "start"
+
+        if choice == "1":   
+            while temp == True:
+                confirm = input("Please confirm that you want to start a new game (yes/no): ")
+
+                confirm = confirm.lower()
+                while confirm not in ["yes", "no", "y", "n"]:
+                    confirm = input("Please confirm that you want to start a new game (yes/no): ")
+                if confirm == "yes" or confirm == "y":
+                    clear()
+                    return None, None, [], "start"
+                elif confirm == "no" or confirm == "n":
+                    temp = False
+
         elif choice == "2":
+
             while temp == True:
                 print("\n")
                 print("Available save files:")
@@ -172,13 +179,17 @@ def main_menu():
                     temp = False
                         
         elif choice == "3":
+
             while temp == True:
                 print("Available save files:")
+
                 for file in Path("SaveFile").glob("*.json"):
                     print(f" - {file.stem}")
+                    
                 Name = input("Enter your name to delete save: ")
                 base_dir = os.path.dirname(os.path.abspath(__file__))
                 save_file = os.path.join(base_dir,"SaveFile", f"{Name}.json")
+
                 if os.path.exists(save_file):
                     os.remove(save_file)
                     say("Save file deleted.")
@@ -213,11 +224,19 @@ Name, Area, bag_items, Path = main_menu()
 def intro():
     global Name 
     if Area is None:  # New Game
-        say("You were having a dream where you were getting chase by something huge and black in an unfamiliar area.")
-        say("You got scared and woke up.") 
+        say("You had a nightmare where you were chased by a mysterious figure in an unfamiliar area.")
+        time.sleep(2)
+        time.sleep(1.5)
+        print("You got scared ", end = "", flush = True)
+        time.sleep(2)
+        say("and woke up.") 
+
         say("You look around to your surroundings.")
+        time.sleep(1.5)
         say("The place was dark and cold. You're in a small room with white walls and a single bed.") 
-        say("You doesn't remember a single thing…")
+        time.sleep(1.5)
+        say("You don't remember a single thing…")
+        time.sleep(1.5)
         say("Who are you? Where are you at?")
         time.sleep(3)
         Name = SingleBox("You see an ID tag with your face beside you", ask_input=True, prompt="Enter your name: ")
@@ -343,7 +362,6 @@ def nar3():
         save_checkpoint({"name": Name, "area": "Nar4", "bag":bag_items, "path": Path}, Name)
         time.sleep(4) #save
 
-
 #("Alien is still chasing you at the back!")
 def nar4():
     global Path
@@ -393,9 +411,7 @@ def nar6():
         say("You take the keycard in case you need it")
         if "keycard" not in bag_items:
             bag_items.append("keycard")
-        time.sleep(2)
-
-        
+        time.sleep(2)      
                 
 def weaponary_room():
     say("The room was in shambled.\n" \
@@ -437,13 +453,17 @@ def weaponary_room():
                 bag_items.append("gun")
             moveCounter -= 1
         elif Action == "3":
-            say("You checked the armour shelf and found a kevlar vest.\n" \
-            "You took it with you.")
+            say("You checked the armour shelf and found a kevlar vest.") 
             if "vest" not in bag_items:
+                say("You took it with you.")
                 bag_items.append("vest")
+            elif "vest" in bag_items:
+                say("You already have a vest")
+            time.sleep(2)
             moveCounter -= 1
         else:
             say("Invalid choice. Please choose 1, 2, or 3.")
+            time.sleep(2)
 
 def laboratory():
     say("You landed on your feet.\n" \
@@ -477,6 +497,7 @@ def laboratory():
             time.sleep(2)
         else:
             say("invalid choice. Choose 1, 2 or 3")
+            time.sleep(2)
 
 def security_room():
     say("You opened the door with the security card you found at the bridge")
@@ -489,7 +510,7 @@ def security_room():
     time.sleep(5)
     moveCounter=3
     while moveCounter > 0:
-        Action = render(bag_items=bag_items
+        Action = render(bag_items=bag_items,
             narration="What will you do?",
             options=["1.press the dock button","2.take the key","3.take the fuse","4.Check the CCTV"])
         
@@ -519,144 +540,88 @@ def security_room():
             time.sleep(2)
         else:
             say("invalid choice. Please choose 1, 2, 3 or 4")
+            time.sleep(2)
 
 def supply_room():
     say("You arrived at supplies room.")
     time.sleep(2)
-    say("The room was a messed")
+    say("The room was a messed.")
+    time.sleep(2)
+    say("The ration food was splattered everywhere.\n" \
+    "The ammunition and consumables has been wrecked")
+    time.sleep(2)
+    say("There's a box of bomb, smoke bomb and a used vest.")
+    time.sleep(3)
+    moveCounter = 2
+    while moveCounter > 0:
+        Action = render(bag_items=bag_items,\
+            narration="What will you do?",
+            options=["1.Check the box of bomb","2.Take the smokebomb","3.take the vest"])
+        
+        if Action == "1":
+            say("You checked the box full of bomb")
+            time.sleep(2)
+            say("You take one of them.")
+            if "bomb" not in bag_items:
+                bag_items.append("bomb")
+            moveCounter -= 1
+            time.sleep(2)
+        elif Action == "2":
+            say("You take the smokebomb from the ground")
+            if "smokebomb" not in bag_items:
+                bag_items.append("smokebomb")
+            moveCounter -= 1
+            time.sleep(3)
+        elif Action == "3":
+            if "vest" in bag_items:
+                say("you already have a vest.")
+                time.sleep(2)
+                say("You didn't take it")
+            elif "vest" not in bag_items:
+                bag_items.append("vest")
+                say("You rip the vest out of the dead body.")
+                time.sleep(2)
+                say("You got a vest.")
+            moveCounter -= 1
+            time.sleep(2)
+        else:
+            say("Invalid choices, please choose 1, 2 or 3")
+            time.sleep(2)
+
+def evacuation_room():
+    say("You entered the emergency evacuation room.")
+    time.sleep(2)
+    say("There an escaped pod but it's locked and needed a fuse ")
+    if "fnotes" not in bag_items:
+        bag_items.append("fnotes")
+    while True:
+        Action = render(bag_items=bag_items,
+            narration="What would you do?",
+            options=["1.try to open the escape pod","2.leave"])
+
+        if Action == "1":
+            continue #puzzle here
+
+        elif Action == "2":
+            say("You decided to leave")
+            time.sleep(2)
+            break
+        else:
+            say("Invalid choice. Please choose 1 or 2")
+            time.sleep(2)
     
-
-# print("--------------------------------------------------------------------------------------------------------------------------------------------")
-# Door = input("Enter “Close the door”. ")
-# print("--------------------------------------------------------------------------------------------------------------------------------------------")
-# say("You are temporary safe. At least for now.")
-# say("But the alien is still trying to get in.")
-# say("Dealing massive damage onto the door. Biting. Scratching. Screaming through the door.")
-# say("The door won’t last any longer…")
-# say("You saw a locker and a vent.")
-# print("--------------------------------------------------------------------------------------------------------------------------------------------")
-# Escape = input("Would you hide in the locker or the vent? [Locker/Vent] ")
-# print("--------------------------------------------------------------------------------------------------------------------------------------------")
-# if Escape == "Vent":
-#     say("You unscrew the vent and crawled inside.")
-#     say("The alien broke the door and entered the room.")
-#     say("Without hesitation, alien rush into the vent.")
-#     say("You are trying to crawl as fast as you can, hoping that the alien won’t catch you.")
-#     say("The alien manage to catch up with you in few seconds.")
-#     say("You got killed.")
-#     say("GAME OVER")
-#     exit()
-# else:
-#     print("--------------------------------------------------------------------------------------------------------------------------------------------")
-#     Unscrew = input("Would you unscrew the vents before you hide in the locker? [Yes/No] ")
-#     print("--------------------------------------------------------------------------------------------------------------------------------------------")
-#     if Unscrew == "Yes":
-#         say("You unscrew the vent and hide in the locker.")
-#     else:
-#         say("You decided to not unscrew the vent.")
-#         say("The alien broke the door and entered the room.")
-#         say("The alien looked around.")
-#         say("The alien targeted onto the locker.")
-#         say("The alien bite opened the locker and saw you inside.")
-#         say("You got killed.")
-#         say("GAME OVER")
-#         exit()
-
-# say("The alien broke the door and entered the room.")
-# say("The alien heard the sound of you unscrewing the vent.")
-# say("The alien ran past your locker and rushed into the vent.")
-# say("Leaving you alone in the room.")
-# say("You survived. It was a close call.")
-# say("You got out from the locker and you saw a dead body of a worker.")
-# say("There is a keycard on his hand.")
-# say("--------------------------------------------------------------------------------------------------------------------------------------------")
-# Keycard = input("Would you take the keycard? [Yes/No] ")
-# say("--------------------------------------------------------------------------------------------------------------------------------------------")
-# if Keycard == "Yes":
-#     say("You took the keycard and put it in your pocket.")
-# else:
-#     say("You left the keycard.")
-    
-# #Map
-# say("You saw a map on the wall.")
-# say("A map for this spaceship!")
-# say("You rip off the map and put it in your pocket.")
-# say("YOU GOT A MAP!")
-
-# #Flesh
-# say("After you got out from the hallway there is a kitchen.")
-# say("You went inside and you saw a flesh. ")
-# say("It looks like a piece of human flesh…?")
-# say("--------------------------------------------------------------------------------------------------------------------------------------------")
-# Flesh = input("Would you bring the flesh along? [Yes/No] ")
-# say("--------------------------------------------------------------------------------------------------------------------------------------------")
-# if Flesh == "Yes":
-#     say("You took the flesh.")
-# else:
-#     say("You decided to not take the flesh.")
-
-# #Next Area
-# say("The maps shows few places that might be useful for you to go.")
-# say("[Control Panel]")
-# say("[Emergency Evacuation Dock]")
-# say("[Ventilation Control]")
-# say("[Laboratory]")
-# say("--------------------------------------------------------------------------------------------------------------------------------------------")
-# Area = input("Where would you like to go next? ")
-# say("--------------------------------------------------------------------------------------------------------------------------------------------")
-
-# #Hard Part
-# if Area == "Control Panel":
-#     say("You went to the Control Panel.")
-#     say("You found a communication devices that you could look for help.")
-#     say("The captain’s body is died left on the captain’s chair…")
-#     say("You got a high access keycard from the captain’s body.")
-#     say("You were able to call for help but password is required.")
-#     print("--------------------------------------------------------------------------------------------------------------------------------------------")
-#     Password = input("Enter the password: ")
-#     print("--------------------------------------------------------------------------------------------------------------------------------------------")
-#     if Password == "FCI-2026":
-#         say("You entered the correct password.")
-#         say("You called for help by telling them what you had been facing on the spaceship.")
-#         say("You received a response from the other side, a coordinate of your home, Earth.")
-#     else:
-#         say("You entered the wrong password.")
-#         print("--------------------------------------------------------------------------------------------------------------------------------------------")
-#         Decision = input("What would you like to do next? [Try again/Go to another area] ")
-#         print("--------------------------------------------------------------------------------------------------------------------------------------------")
-#         if Decision == "Try again":
-#             say("You try to enter the password again.")
-#             say("You entered the wrong password.")
-#             say("You triggered the safety alarm. The alien heard the alarm and rushed into the control panel room.")
-#             say("You got killed.")
-#             say("GAME OVER")
-#             exit()
-#         else:
-#             say("You decided to go to another area instead of trying to enter the password again.")
-#             say("[Control Panel]")
-#             say("[Emergency Evacuation Dock]")
-#             say("[Ventilation Control]")
-#             say("[Laboratory]")
-#             print("--------------------------------------------------------------------------------------------------------------------------------------------")
-#             Area = input("Where would you like to go next? ")
-#             print("--------------------------------------------------------------------------------------------------------------------------------------------")
-  
-
-# elif Area == "Emergency Evacuation Dock":
-#     say("You went to the Emergency Evacuation Dock.")
-
-# elif Area == "Ventilation Control":
-#     say("You went to the Ventilation Control Room.")
-#     say("You saw a battery at the corner of the room.")
-#     say("Then you heard noises coming out from the vent… ")
-#     say("The alien crawl through the vent and ended up at the ventilation control room!")
-
-# elif Area == "Laboratory":
-#     say("You went to the Laboratory.")
-#     say("There is a tiny note left on a table with 6-digit PIN, is it some kind of password?")
-#     say("It written on the note: FCI-2026")
-#     say("There is a locked door in the laboratory.")
-
+def ending():
+    say("The Alien found you.")
+    time.sleep(2)
+    say("It is standing at the door, looking at you.")
+    time.sleep(2)
+    if "gate_dock" or "gun" or "NTW-20" in bag_items:   
+        while True:    
+            Action = render(bag_items=bag_items,
+                narration="In spur of the moment,                         \n"\
+                "You choose to run to",
+                options=["1.Dock","2.Evacuation room","3.Security room"], timeout=10)
+                
 
 # Main part
 intro()
