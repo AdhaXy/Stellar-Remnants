@@ -585,8 +585,7 @@ def supply_room():
             moveCounter -= 1
             time.sleep(2)
         else:
-            say("Invalid choices, please choose 1, 2 or 3")
-            time.sleep(2)
+            say("Invalid choices")
 
 def evacuation_room():
     say("You entered the emergency evacuation room.")
@@ -609,19 +608,86 @@ def evacuation_room():
         else:
             say("Invalid choice. Please choose 1 or 2")
             time.sleep(2)
-    
+
 def ending():
     say("The Alien found you.")
     time.sleep(2)
     say("It is standing at the door, looking at you.")
     time.sleep(2)
-    if "gate_dock" or "gun" or "NTW-20" in bag_items:   
+    if "gate_dock" or "gun" or "NTW-20" and "smokebomb" in bag_items:   
         while True:    
             Action = render(bag_items=bag_items,
                 narration="In spur of the moment,                         \n"\
                 "You choose to run to",
                 options=["1.Dock","2.Evacuation room","3.Security room"], timeout=10)
-                
+            
+            if Action == "1":
+                say("You run with all your might to the dock.")
+                time.sleep(2)
+                say("But the Alien is starting to catch up.\n" \
+                "So you throw your smoke bomb to confuse the Alien.")
+                time.sleep(2)
+                bag(bag_items)
+                print("\n")
+                SingleBox("Throw the smoke bomb",ask_input=True,prompt="Press anything")
+                time.sleep(2)
+                print("------------------------------------------------------------------------------------------" \
+                "----------")
+                smoke()
+                print("-----------------------------------------------------------------------------------------" \
+                "-----------")
+                time.sleep(3)
+                clear()
+                say("poof!") 
+                time.sleep(1)
+                say("A heavy cloud emerge and you go through it to lose the Alien")
+                time.sleep(2)
+                say("You got to the dock and head into the Jet\n" \
+                "You didn't waste anytime and get it working.")
+                time.sleep()
+                say("The Alien jump to the jet and you throttle full speed.")
+                time.sleep(1)
+                say("The Alien grip loosen and it let go of the ship.")
+                time.sleep(3)
+                say("You take a deep breath sighing relief that this ordeal has gone.\n" \
+                "You fly through the galaxy in searching for a hope that there's someone else out there.")
+                time.sleep(5)
+                clear()
+                say("You Got 'Escaped' Ending")
+                print("------------------------------------------------------------------------------------------" \
+                "--------------------------------")
+                jet()
+                print("-----------------------------------------------------------------------------------------" \
+                "--------------------------------")
+                time.sleep(7)
+                break
+
+            elif Action == "2":
+                say("You run with all your might to the evacuation room.")
+                time.sleep(2)
+                say("But the Alien is starting to catch up.\n" \
+                "So you throw your smoke bomb to confuse the Alien.")
+                time.sleep(2)
+                bag(bag_items)
+                print("\n")
+                SingleBox("Throw the smoke bomb",ask_input=True,prompt="Press anything")
+                time.sleep(2)
+                print("------------------------------------------------------------------------------------------" \
+                "--------------------------------")
+                smoke()
+                print("-----------------------------------------------------------------------------------------" \
+                "--------------------------------")
+                time.sleep(3)
+                clear()
+                say("poof!") 
+                time.sleep(1)
+                say("A heavy cloud emerge and you go through it to lose the Alien")
+                time.sleep(2)
+            
+
+            else:
+                say("Invalid choice. Please choose 1, 2 or 3")
+
 
 # Main part
 intro()
@@ -633,5 +699,37 @@ nar5()
 
 # art placeholder
 
+def smoke():
+    print("⠀⠀⢤⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡄⠀⠀⠀⢀⣀⣤⣤⣤⣤⣀⣠⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣤⠀⠀\n \
+    ⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣤⣤⠤⠤⢤⣄⣠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣷⣦⡀⠀⢀⡀⠀⠀⠀⠀⠀⠀⠀⠀  \n \
+    ⠀⠀⠀⠀⠀⢀⣤⡶⢛⡭⠖⠚⠛⡿⠶⢶⣿⣿⡿⠛⠛⣉⣀⣀⣀⠀⠉⠻⣷⣾⣿⣿⣷⡄⠀⠀⠀⠀⠀⠀\n \
+    ⠀⠀⠀⠀⣰⡿⢃⡼⠛⠀⠀⣀⣴⣶⣶⣾⣿⣿⣦⣘⣿⣿⣿⣿⣿⣿⣦⡄⠸⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀ \n \
+    ⠀⠀⠀⢰⣿⣁⠊⡋⠀⠀⣼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡄⠛⠻⢿⣿⡿⢦⣄⡀⠀⠀⠀ \n \
+    ⢠⣴⣤⣾⣿⢿⣿⣿⣿⣷⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣦⡀⣟⣀⣈⣿⣿⣦⣤⡄ \n \
+    ⠈⠉⠉⠉⣻⠟⠉⠀⠀⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠛⢻⣿⣿⣿⡟⠃ \n \
+    ⠀⠀⠀⢰⠃⠀⠀⠀⠀⠀⠙⠻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠆⠀⠙⣿⣿⠇⠀ \n \
+    ⠀⠀⢀⠘⠀⠀⠀⠀⠦⢀⣴⣶⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠀⠀⠀⠛⠁⠀⠀ \n \
+    ⠀⠀⢸⣆⠀⠀⠀⠀⢰⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠁⠀⠀⢀⠇⠀⠀⠀ \n \
+    ⠀⠀⠀⠙⠀⠀⠀⠀⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠉⠀⠀⠀⠀⠈⠀⠀⠀⠀\n \
+    ⠀⠀⠉⠀⠀⠀⠀⠀⠀⢻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠃⣴⣶⣶⣦⡀⠀⠀⠉⠀⠀\n \
+    ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡟⣿⣿⣿⣿⡿⠿⢿⣿⣿⠀⠀⠀⠀⠀\n \
+    ⠀⠀⠀⠀⠀⠀⠀⢀⣤⠠⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣶⣶⣿⣿⣦⣄⠀⠀⠀\n \
+    ⠀⠀⠀⠀⠀⠴⠿⠿⠛⠓⠉⠛⠿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠛⠛⠉⠉⠛⠛⠛⠋⠀⠘⠛⠀⠀⠀\n \
+    ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠸⠟⠛⠛⠉⠉⠉⠉⠉⠉⠉⠉⠉⠁⠛⠶⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀")
 
-
+def jet():
+    print("⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⡄⠀⠀⠀⠀⠀\n \
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠰⣾⣷⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣾⠁⠀⠀⠀⠀⠀⠀⠀⠀\n \
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢿⣿⣷⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣼⠇⠀⠀⠀⠀⠀⠀⠀⠀⠀\n \
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣾⣿⣿⡁⣶⣾⣿⣿⣿⣿⣶⣶⣄⡀⠀⠀⠀⢰⡏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n \
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣤⣾⣷⣦⣴⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠿⢿⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n \
+⠘⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⣤⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣛⣻⣿⣿⡿⠁⠀⢸⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n \
+⠀⠈⠣⡀⠀⠀⠀⠀⠀⠀⠀⢹⣿⣿⣿⡿⣿⣿⣿⣿⣿⣿⣿⣿⣟⣫⣿⣿⣿⢿⣿⣿⣿⣿⣿⣿⡄⠀⠈⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n \
+⠀⠀⠀⠙⢄⠀⠀⠀⣀⣠⣶⣿⣽⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣮⡻⠿⣿⣿⡿⠇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n \
+⠀⠀⠀⠀⠀⢳⣦⣼⣿⣿⡿⠿⠛⠛⢿⣿⣿⣿⣿⣿⣿⡿⠿⠻⣿⣿⣿⣿⣿⣿⣿⣿⣦⣌⠛⠿⣷⣤⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n \
+⠀⠀⠀⠀⠀⢰⡏⠉⠀⠀⠀⠀⠀⠀⠀⠙⠛⠛⠉⠁⠀⠀⠀⠀⠈⠛⠛⠛⣿⣿⣿⣿⣿⣿⣷⣄⡀⠹⣷⣦⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀\n \
+⠀⠀⠀⠀⠀⣾⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⠿⡿⢻⣿⣿⣿⣿⣿⣶⣍⠛⢿⣶⣄⡀⠀⠀⠀⠀⠀⠀\n \
+⠀⠀⠀⠀⠀⡏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⢿⣿⣿⣿⣿⣿⣿⣶⣽⣿⣿⣦⡀⠀⠀⠀⠀\n \
+⠀⠀⠀⠀⠘⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣄⠀⠀⠀\n \
+⠀⠀⠀⠀⠀⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣦⠀⠀\n \
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠙⠿⠛⠿⠿⠛⠉⠛⠿⣿⡇⠀")
