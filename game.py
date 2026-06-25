@@ -585,6 +585,30 @@ def supply_room():
         else:
             say("Invalid choices")
 
+def smokeScene():
+    say("You run with all your might to the dock.")
+    time.sleep(2)
+    say("But the Alien is starting to catch up.\n" \
+    "So you throw your smoke bomb to confuse the Alien.")
+    time.sleep(2)
+    bag(bag_items)
+    print("\n")
+    SingleBox("Throw the smoke bomb",ask_input=True,prompt="Press anything")
+    time.sleep(2)
+    print("------------------------------------------------------------------------------------------" \
+    "----------")
+    smoke()
+    print("-----------------------------------------------------------------------------------------" \
+    "-----------")
+    time.sleep(3)
+    clear()
+    say("poof!") 
+    time.sleep(1)
+    say("A heavy cloud emerge and you go through it to lose the Alien")
+    time.sleep(2)
+
+
+
 def evacuation_room():
     global puzzle
     say("You entered the emergency evacuation room.")
@@ -614,116 +638,177 @@ def ending():
     time.sleep(2)
     say("It is standing at the door, looking at you.")
     time.sleep(2)
-    if "gate_dock" or "gun" or "NTW-20" and "smokebomb" in bag_items:   
+    #start ending with certain item. bomb not included but bomb ending still there
+    if any(items in bag_items for items in["smokebomb","gate_dock","jet_key","gun","NTW-20"]):
         while True:    
             Action = render(bag_items=bag_items,
                 narration="In spur of the moment,                         \n"\
                 "You choose to run to",
                 options=["1.Dock","2.Evacuation room","3.Security room"], timeout=10)
             
+            #if user choose dock
             if Action == "1":
-                say("You run with all your might to the dock.")
-                time.sleep(2)
-                say("But the Alien is starting to catch up.\n" \
-                "So you throw your smoke bomb to confuse the Alien.")
-                time.sleep(2)
-                bag(bag_items)
-                print("\n")
-                SingleBox("Throw the smoke bomb",ask_input=True,prompt="Press anything")
-                time.sleep(2)
-                print("------------------------------------------------------------------------------------------" \
-                "----------")
-                smoke()
-                print("-----------------------------------------------------------------------------------------" \
-                "-----------")
-                time.sleep(3)
-                clear()
-                say("poof!") 
-                time.sleep(1)
-                say("A heavy cloud emerge and you go through it to lose the Alien")
-                time.sleep(2)
-                say("You got to the dock and head into the Jet\n" \
-                "You didn't waste anytime and get it working.")
-                time.sleep()
-                say("The Alien jump to the jet and you throttle full speed.")
-                time.sleep(1)
-                say("The Alien grip loosen and it let go of the ship.")
-                time.sleep(3)
-                say("You take a deep breath sighing relief that this ordeal has gone.\n" \
-                "You fly through the galaxy in searching for a hope that there's someone else out there.")
-                time.sleep(5)
-                clear()
-                say("You Got 'Escaped' Ending")
-                print("------------------------------------------------------------------------------------------" \
-                "--------------------------------")
-                jet()
-                print("-----------------------------------------------------------------------------------------" \
-                "--------------------------------")
-                time.sleep(7)
-                break
+                if "smokebomb" in bag_items:
+                    if "gate_dock" and "jet_key" in bag_items:
+                        smokeScene()
+                        say("You got to the dock and head into the Jet\n" \
+                        "You didn't waste anytime to get it working.")
+                        time.sleep(2)
+                        say("The Alien jump to the jet and you go full speed.")
+                        time.sleep(1)
+                        say("The Alien grip loosen and it let go of the ship.")
+                        time.sleep(3)
+                        say("You take a deep breath sighing relief that this ordeal has gone.\n" \
+                        "You fly through the galaxy in searching for a hope that there's someone else out there.")
+                        time.sleep(5)
+                        clear()
+                        say("You Got 'Escaped' Ending")
+                        print("------------------------------------------------------------------------------------------" \
+                        "--------------------------------")
+                        jet()
+                        print("-----------------------------------------------------------------------------------------" \
+                        "--------------------------------")
+                        time.sleep(7)
+                        break
+                    elif "gate_dock" not in bag_items:
+                        smokeScene()
+                        say("You got to the gate but it won't open.\n" \
+                        "The Alien catch up and kill you.")
+                        time.sleep(5)
+                        exit()
 
+                    elif "gate_dock" in bag_items and "jet_key" not in bag_items:
+                        smokeScene()
+                        say("You got to the dock and head into the Jet\n" \
+                        "You didn't waste anytime to get it working.")
+                        time.sleep(2)
+                        say("The ship can't get start and the Alien jump infront of the window.\n" \
+                        "It got in!")
+                        time.sleep(1)
+                        say("You tried to fight the Alien but it overpower you instantly, killing you in a split second.")
+                        time.sleep(5)
+                        exit()
+                    
+                    elif "gate_dock" in bag_items and "bomb" in bag_items:
+                        smokeScene()
+                        say("You got to the dock and head into the Jet\n" \
+                        "You didn't waste anytime to get it working.")
+                        time.sleep(2)
+                        say("The ship can't get start and the Alien jump infront of the window.\n" \
+                        "It got in!")
+                        time.sleep(1)
+                        say("before it kills you, you detonate the bomb you got in the supplies room and" \
+                        "destroy both you and the monster")
+                        time.sleep(3)
+                        clear()
+                        SingleBox("You got Suicide Ending!")
+                        time.sleep(5)
+                        exit()
+                        
+                    elif "bomb" in bag_items:
+                        smokeScene()
+                        say("You got to the gate but it won't open.\n" \
+                        "Before the monster could kill you, You detonate the bomb and destroy both you and the Alien")
+                        time.sleep(3)
+                        SingleBox("You got Suicide Ending")
+                        time.sleep(5)
+                        exit()
+
+                elif"smokebomb" not in bag_items:
+                    say("You tried to run as fast as you can without looking back.")
+                    time.sleep(1)
+                    say("Suddenly you was on the ground and see your body without a head.")
+                    time.sleep(1)
+                    say("You lost conciousness.")
+                    say("Game over!!!")
+                    exit()
+
+            #if user choose evacuation room
             elif Action == "2":
-                say("You run with all your might to the evacuation room.")
-                time.sleep(2)
-                say("But the Alien is starting to catch up.\n" \
-                "So you throw your smoke bomb to confuse the Alien.")
-                time.sleep(2)
-                bag(bag_items)
-                print("\n")
-                SingleBox("Throw the smoke bomb",ask_input=True,prompt="Press anything")
-                time.sleep(2)
-                print("------------------------------------------------------------------------------------------" \
-                "--------------------------------")
-                smoke()
-                print("-----------------------------------------------------------------------------------------" \
-                "--------------------------------")
+                #original ending when all item is in bag
+                if ("gun" in bag_items or "NTW-20" in bag_items) and "smokebomb" in bag_items:
+                    smokeScene()
+                    say("You run to the evacuation room to get to the escape pod.\n"\
+                    "The hallway that was seemingly short before feels longer now and the monster is gaining up on you.")
+                    time.sleep(1)
+                    say("You reach the escape pod!")
+                    time.sleep(1)
+                    if puzzle == False:
+                        say("The door is jammed.")
+                        time.sleep(1)
+                        say("You tried to pry it open.")
+                        time.sleep(2)
+                        # puzzle 
+                    say("The door opened and you get inside.")
+                    time.sleep(1)
+                    say("You slammed the door shut and start turning on the escape pod")
+                    if "fuse" in bag_items:
+                        say("The escape pod start running.")
+                        time.sleep(1)
+                        say("But...")
+                        time.sleep(2)
+                        say("All hope lost after the escape pod suddenly stop.")
+                        time.sleep(2)
+                        say("Your future seems bleak.")
+                        time.sleep(1)
+
+                    say("the monster pried the door open and grab you. getting ready to slimed you up")
+                    time.sleep(1)
+                    say("You muster up all your strength to get your right arm free and stab the Alien eye with a pocket knife.\n" \
+                    "The Alien throw you off and shriek in pain.")
+                    time.sleep(1)
+                    say("You grab your weapon and ready to fight the monster.")
+                    
+                    #battle system
+                                            
+                    say("The lifeless body of the Alien calm you down.")
+                    time.sleep(2)
+                    say("After a while, You stand up and go to the bridge slowly.")
+                    time.sleep(1)
+                    say("Each step was like lifting a heavy dumbell.")
+                    time.sleep(1)
+                    say("You arrived at the control station in search for a chance that there's other people out there.")
+                    time.sleep(1)
+                    say("A voice message was playing")
+                    SingleBox("We receive your distress signal soldier.\n " \
+                    "We have sent our man to the battleship.\n" \
+                    "They will arrive soon so please hold on.")
+                    time.sleep(3)
+                    say("Your eyes lit up!")
+                    time.sleep(1)
+                    say("Your fell down, your leg feels like jelly.")
+                    time.sleep(1)
+                    say("The adrenaline rush has ended.")
+                    time.sleep(1)
+                    say("Your eyes feels heavy.")
+                    time.sleep(1)
+                    say("you lost conciousness.")
+                    time.sleep(3)
+                    SingleBox("You got Termiator Ending!")
+                    time.sleep(5)
+                    break
+                
+                elif"smokebomb" not in bag_items:
+                    say("You tried to run as fast as you can without looking back.")
+                    time.sleep(1)
+                    say("Suddenly you was on the ground and see your body without a head.")
+                    time.sleep(1)
+                    say("You lost conciousness.")
+                    say("Game over!!!")
+                    exit()
+
+                #smoke but required item not taken
+                elif "smokebomb" in bag_items:
+                    say("")
+                
+            elif Action == None:
+                say("Your late decision lead to your demise.")
+                time.sleep(1)
+                say("You got chased by the Alien and died")
                 time.sleep(3)
-                clear()
-                say("poof!") 
-                time.sleep(1)
-                say("A heavy cloud emerge and you go through it to lose the Alien.")
-                time.sleep(2)
-                say("You run to the evacuation room to get to the escape pod.\n"\
-                "The hallway that was seemingly short before feels longer now and the monster is gaining up on you.")
-                time.sleep(1)
-                say("You reach the escape pod!")
-                time.sleep(1)
-                if puzzle == False:
-                    say("The door is jammed.")
-                    time.sleep(1)
-                    say("You tried to pry it open.")
-                    time.sleep(2)
-                    # puzzle 
-                say("The door opened and you get inside.")
-                time.sleep(1)
-                say("You slammed the door shut and start turning on the escape pod")
-                if "fuse" in bag_items:
-                    say("The escape pod start running.")
-                    time.sleep(1)
-                    say("But...")
-                    time.sleep(2)
-                    say("All hope lost after the escape pod suddenly stop.")
-                    time.sleep(2)
-                    say("Your future seems bleak.")
-                    time.sleep(1)
-
-                say("the monster pried the door open and grab you. getting ready to slimed you up")
-                time.sleep(1)
-                say("You muster up all your strength to get your right arm free and stab the Alien eye with a pocket knife.\n" \
-                "The Alien throw you off and shriek in pain.")
-                time.sleep(1)
-                say("You grab your weapon and ready to fight the monster.")
-                #battle system
-                                        
-                say("The lifeless body of the Alien calm you down.")
-                time.sleep(2)
-                say("After a while, You stand up and go to the bridge slowly.")
-                time.sleep(1)
-                say("Each step was like lifting a heavy dumbell.")
-            
-
-            else:
-                say("Invalid choice. Please choose 1, 2 or 3")
+                exit()
+    
+    save_checkpoint({"name":Name, "area":"Nar8", "bag":bag_items,"path":Path},Name)
 
 
 # Main part

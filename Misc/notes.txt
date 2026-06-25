@@ -12,14 +12,7 @@ print(f"{RED}You took damage!{RESET}") <--- example to change text color
 say(f"{CYAN}{narration.rjust(WIDTH)}{RESET}")
 print(f"{CYAN}You are in a dark room.{RESET}")
 
-save_checkpoint({"name": Name, "area": "Nar1", "bag": []}, Name)
-
-After they pick a room
-save_checkpoint({"name": Name, "area": "Laboratory", "bag": bag_items}, Name)
-
-After they pick up an item
-bag_items.append(andfnsdnf)
-save_checkpoint({"name": Name, "area": "Laboratory", "bag": bag_items}, Name)
+save_checkpoint({"name": Name, "area": "Nar5", "bag":bag_items, "path": Path}, Name) 
 
 Gives player 10 seconds to answer
 choice = timed_input("  Choose: ", timeout=10)
