@@ -133,7 +133,7 @@ def load_checkpoint(name):
 
 #related to checkpoint. basically the checkpoint numbering system.
 def reached(Area, checkpoint_num):
-    checkpoint = [None, "Nar1", "Nar2", "Nar3", "Nar4", "Nar5", "Nar6"]
+    checkpoint = [None, "Nar1", "Nar2", "Nar3", "Nar4", "Nar5", "Nar6","Nar7 "]
     if Area is None:
         return True
     return checkpoint.index(Area) <= checkpoint_num
@@ -411,6 +411,8 @@ def nar6():
             bag_items.append("keycard")
         time.sleep(2)      
                 
+
+
 def weaponary_room():
     say("The room was in shambled.\n" \
     "Dead bodies and scattered weapon.\n" \
