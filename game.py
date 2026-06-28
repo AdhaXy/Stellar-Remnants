@@ -16,6 +16,7 @@ TextSpeed = 0.03
 WIDTH = 120 
 BOX_HEIGHT = 10
 moveCounter = 0
+puzzle = False
 
 RED = "\033[31m"
 GREEN = "\033[32m"
@@ -27,6 +28,34 @@ RESET = "\033[0m"
 #===============================================VARIABLES=========================================================
 
 #===============================================FUNCTION===========================================================
+#the puzzle box color
+def red(text):
+    width = len(text) + 6
+    result = RED + "┌" + "─" * width + "┐" +  "\n" + "|" + text.center(width) + "|" +  "\n" \
+    + "└" + "─" * width + "┘" +  RESET
+    return result
+
+def blue(text):
+    width = len(text) + 6
+    result = BLUE + "┌" + "─" * width + "┐" +  "\n"
+    result += "|" + text.center(width) + "|" +  "\n"
+    result += "└" + "─" * width + "┘" +  RESET
+    return result
+
+def green(text):
+    width = len(text) + 6
+    result = GREEN + "┌" + "─" * width + "┐" +  "\n" \
+    + "|" + text.center(width) + "|" +  "\n" \
+    + "└" + "─" * width + "┘" +  RESET
+    return result
+
+def yellow(text):
+    width = len(text) + 6
+    result = YELLOW + "┌" + "─" * width + "┐" +  "\n"
+    result += "|" + text.center(width) + "|" +  "\n"
+    result += "└" + "─" * width + "┘" +  RESET
+    return result
+
 #Typing animation
 def say(text):
     for char in text:
@@ -62,12 +91,13 @@ def bag(bag_items):
     print("-" * WIDTH)
 
 #Screen function  <--- the main screen supposedly 
-def render(bag_items, narration, options, timeout=None):
+def render( narration, options,bag_items=None, timeout=None):
     clear()
 
     print("-" * WIDTH)
-    print(f"  Bag: {', '.join(bag_items)}")
-    print("-" * WIDTH)
+    if bag_items:
+        print(f"  Bag: {', '.join(bag_items)}")
+        print("-" * WIDTH)
 
     print()
     say(narration)
@@ -411,7 +441,9 @@ def nar6():
             bag_items.append("keycard")
         time.sleep(2)      
                 
-
+#we will make nar7 nar8 for 3 move by the player including the nar6. whoever wanna do something here please, my pleasure. its really tirin. <------
+#I already done all the room so you just need to make like a hub where the player can choose where they going. then we can paste to
+#nar7 and nar8 a bit of thinkering for dialogue then the ending. I know no one seeing this, I just need something to keep me sane.
 
 def weaponary_room():
     say("The room was in shambled.\n" \
@@ -609,7 +641,92 @@ def smokeScene():
     say("A heavy cloud emerge and you go through it to lose the Alien")
     time.sleep(2)
 
+def puzzled(max_tries):
+    global puzzle
+    clear()
+    print("U picked up a card that show a hint.\n" \
+    "Blue = red\n" \
+    "green = green\n" \
+    "yellow = blue\n")
+    time.sleep(3)
 
+    # wires = [("blue","red"),("green","green"),("black","blue")]
+
+    print("a small light show the wires.")
+    attempt = max_tries
+    # for left, right in wires:
+    solved = False
+    while attempt > 0 and not solved:
+        clear()
+        print( blue("NTW"))
+        choice = render(narration=red("-20") + "\n" + blue("Here") + "\n" + green("123"),
+                options=["1.red","2.blue","3.green"])
+        if choice == "1":
+            solved = True 
+            say("The wire connect.")
+            time.sleep(1)
+            say("You move on to the next wire")
+            time.sleep(1)
+        elif choice == "2" or choice =="3":
+            say("you got it wrong!\n" \
+            "The wire shocked you!")
+            attempt -= 1
+            if attempt > 0:
+                say("You try again")
+            elif attempt == 0:
+                say("You stopped")
+        else:
+            say("Invalid choice. Please pick 1, 2, or 3")
+    solved = False
+    while attempt > 0 and not solved:
+        clear()
+        print( green("9 + 10"))
+        choice = render(narration=yellow("19") + "\n" + red("no math") + "\n" + green("21"),
+                options=["1.yellow","2.red","3.green"])
+        if choice == "3":
+            solved = True 
+            say("The wire connect.")
+            time.sleep(1)
+            say("You move on to the next wire")
+            time.sleep(1)
+        elif choice == "2" or choice =="1":
+            say("you got it wrong!\n" \
+            "The wire shocked you!")
+            attempt -= 1
+            if attempt > 0:
+                say("You try again")
+            elif attempt == 0:
+                say("You stopped")
+        else:
+            say("Invalid choice. Please pick 1, 2, or 3")
+    solved = False
+    while attempt > 0 and not solved:
+        clear()
+        print( yellow("H20"))
+        choice = render(narration=red("Hidrogen") + "\n" + blue("water") + "\n" + yellow("answer"),
+                options=["1.red","2.blue","3.yellow"])
+        if choice == "2":
+            solved = True 
+            say("The panel lights up")
+            time.sleep(2)
+        elif choice == "1" or choice =="3":
+            say("you got it wrong!\n" \
+            "The wire shocked you!")
+            attempt -= 1
+            if attempt > 0:
+                say("You try again")
+            elif attempt == 0:
+                say("You stopped")
+        else:
+            say("Invalid choice. Please pick 1, 2, or 3")
+    if solved == False:
+        say("the shocked was too strong. You stop trying")
+        puzzle = False
+        return False
+    elif solved == True:
+        say("The room make a noise signaling its start to come back to life")
+        puzzle = True
+        return True
 
 def evacuation_room():
     global puzzle
@@ -624,8 +741,7 @@ def evacuation_room():
             options=["1.try to open the escape pod","2.leave"])
 
         if Action == "1":
-            puzzle = True
-            continue #puzzle here
+            puzzled(3)
 
         elif Action == "2":
             say("You decided to leave")
@@ -740,7 +856,12 @@ def ending():
                         time.sleep(1)
                         say("You tried to pry it open.")
                         time.sleep(2)
-                        # puzzle 
+                        puzzled(1)
+                        if  puzzle == False:
+                            say("You didn't get to open it.")
+                            time.sleep(1)
+                            say("The alien stab you in the head immediately killing you.")
+                            exit()
                     say("The door opened and you get inside.")
                     time.sleep(1)
                     say("You slammed the door shut and start turning on the escape pod")

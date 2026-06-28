@@ -29,9 +29,8 @@ def say(text):
 
 def red(text):
     width = len(text) + 6
-    result = RED + "┌" + "─" * width + "┐" +  "\n"
-    result += "|" + text.center(width) + "|" +  "\n"
-    result += "└" + "─" * width + "┘" +  RESET
+    result = RED + "┌" + "─" * width + "┐" +  "\n" + "|" + text.center(width) + "|" +  "\n" \
+    + "└" + "─" * width + "┘" +  RESET
     return result
 
 def blue(text):
@@ -57,7 +56,12 @@ def yellow(text):
 
 WIDTH = 120 
 BOX_HEIGHT = 10
-def render(narration, options, timeout=None):
+def render( narration, options,bag_items=None, timeout=None):
+
+    print("-" * WIDTH)
+    if bag_items:
+        print(f"  Bag: {', '.join(bag_items)}")
+        print("-" * WIDTH)
 
     print()
     say(narration)
@@ -73,6 +77,7 @@ def render(narration, options, timeout=None):
 
     if timeout is None:
         return input("Choose: ").strip()
+
 
 # ===================== SKETCH ONLY — one round of the puzzle, to react to, not final code =====================
 
