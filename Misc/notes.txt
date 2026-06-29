@@ -46,7 +46,42 @@ item=
 6.screwdriver - for vent
 
 
+def hub():
+    say("You decided to explore the room.")
+    all_rooms = ["weaponary","laboratory","security","supply","evacuation"]
 
+    while True:
+        available_rooms = [r for r in all_rooms if r not in visited]
+        # ^ this is the short version of step 2's for-loop, does the same thing
+
+        if not available_rooms:
+            say("You've explored everywhere there is to explore.")
+            break
+
+        options = [f"{i+1}.{r}" for i, r in enumerate(available_rooms)]
+        Action = render(bag_items=bag_items, narration="Where do you want to go?", options=options + [f"{len(available_rooms)+1}.Leave"])
+
+        if Action == str(len(available_rooms)+1):
+            say("You decide to leave.")
+            break
+
+        try:
+            choice_index = int(Action) - 1
+            chosen_room = available_rooms[choice_index]
+        except (ValueError, IndexError):
+            say("Invalid choice.")
+            continue
+
+        if chosen_room == "weaponary":
+            weaponary_room()
+        elif chosen_room == "laboratory":
+            laboratory()
+        elif chosen_room == "security":
+            security_room()
+        elif chosen_room == "supply":
+            supply_room()
+        elif chosen_room == "evacuation":
+            evacuation_room()
 
 #Inventory
 # def show_inventory(inventory):

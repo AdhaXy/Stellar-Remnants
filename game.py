@@ -186,7 +186,7 @@ def main_menu():
                     confirm = input("Please confirm that you want to start a new game (yes/no): ")
                 if confirm == "yes" or confirm == "y":
                     clear()
-                    return None, None, [], "start"
+                    return None, None, [], "start", []
                 elif confirm == "no" or confirm == "n":
                     temp = False
 
@@ -201,7 +201,7 @@ def main_menu():
                 save = load_checkpoint(Name)
                 if save:
                     say("Save file found! Loading game...")
-                    return save["name"], save["area"], save["bag"], save["path"]
+                    return save["name"], save["area"], save["bag"], save["path"], save.get("visited",[])
                 else:
                     say("No save file found with that name. Please try again.")
                     temp = False
@@ -246,7 +246,8 @@ def gameOver():
 #===============================================Story===========================================================
 
 SingleBox("Welcome to the game!", ask_input=True, prompt="Press enter to start...")
-Name, Area, bag_items, Path = main_menu()
+Name, Area, bag_items, Path, visited= main_menu()
+visited = set(visited)
 
 #START  <-- finish
 def intro():
@@ -283,7 +284,7 @@ def intro():
     
         print("\n\n")
         say((("The ID Tag showing that you are known as " + Name).center(WIDTH)))
-        save_checkpoint({"name": Name, "area": "Nar1", "bag":bag_items, "path": Path}, Name) #save
+        save_checkpoint({"name": Name, "area": "Nar1", "bag":bag_items, "path": Path, "visited":list(visited)}, Name) #save
         time.sleep(3)
 
 def nar1():
@@ -302,7 +303,7 @@ def nar1():
 
             if Action == "1":
                 say("You slowly and silently approach to the shadow.")
-                save_checkpoint({"name": Name, "area": "Nar2", "bag":bag_items, "path": Path}, Name) #save
+                save_checkpoint({"name": Name, "area": "Nar2", "bag":bag_items, "path": Path, "visited":list(visited)}, Name) #save
                 break
             elif Action == "2":
                 say("You shout at the shadow. The shadow crawl quickly into your direction and jumped on you.")
@@ -339,11 +340,11 @@ def nar2():
                 "\nyou're saved.\nYou found an item in the locker and got into the room nearest to you.")
                 if "weaponary_key" not in bag_items:
                     bag_items.append("weaponary_key")
-                save_checkpoint({"name": Name,"area":"Nar3", "bag":bag_items, "path": Path},Name)
+                save_checkpoint({"name": Name,"area":"Nar3", "bag":bag_items, "path": Path, "visited":list(visited)},Name)
                 break
             elif Action == "2":
                 say("you got into the room before the monster pass the corner")
-                save_checkpoint({"name": Name, "area": "Nar3", "bag":bag_items, "path": Path}, Name) #save
+                save_checkpoint({"name": Name, "area": "Nar3", "bag":bag_items, "path": Path, "visited":list(visited)}, Name) #save
                 break
             else:
                 say("Invalid choice. Please choose 1 or 2.")
@@ -387,7 +388,7 @@ def nar3():
         time.sleep(1)
         say("you went to the vent and hear a crashing noise behind you.\n" \
         "You pick up the pace")
-        save_checkpoint({"name": Name, "area": "Nar4", "bag":bag_items, "path": Path}, Name)
+        save_checkpoint({"name": Name, "area": "Nar4", "bag":bag_items, "path": Path, "visited":list(visited)}, Name)
         time.sleep(4) #save
 
 #("Alien is still chasing you at the back!")
@@ -409,7 +410,7 @@ def nar4():
             say("You found another exit and crawled out of the vent.")
             Path = "laboratory"
             time.sleep(2)
-        save_checkpoint({"name": Name, "area": "Nar5", "bag":bag_items, "path": Path}, Name) #save
+        save_checkpoint({"name": Name, "area": "Nar5", "bag":bag_items, "path": Path, "visited":list(visited)}, Name) #save
 
 def nar5():
     if reached(Area,5):
@@ -429,7 +430,7 @@ def nar5():
         say("There's a shiny thing at the table")
         say("You found a keycard with a security labeled on it")
         time.sleep(3)
-        save_checkpoint({"name":Name, "area":"Nar6", "bag":bag_items, "path":Path}, Name)
+        save_checkpoint({"name":Name, "area":"Nar6", "bag":bag_items, "path":Path, "visited":list(visited)}, Name)
     
 def nar6():
     if reached(Area,6):
@@ -439,11 +440,57 @@ def nar6():
         say("You take the keycard in case you need it")
         if "keycard" not in bag_items:
             bag_items.append("keycard")
-        time.sleep(2)      
-                
-#we will make nar7 nar8 for 3 move by the player including the nar6. whoever wanna do something here please, my pleasure. its really tirin. <------
+        time.sleep(2)
+        say("You think about your next move.")
+        time.sleep(1)
+        say("You decided to explore the room laid ahead on you.")
+        hub()
+        
+def hub():
+    global Path
+    room = ["weaponary","laboratory","security","supply","evacuation"]
+    while True:
+        have_room = [r for r in room if r not in visited]
+
+        options = [f"{i+1}.{r}" for i, r in enumerate(have_room)]
+        Action = render(bag_items=bag_items,narration="There's a couple room you could explore",options=options)
+        
+        try:
+            Action_index = int(Action) -1
+            pick_room = have_room[Action_index]
+        except (ValueError, IndexError):
+            say("invalid choices")
+            continue
+
+        if pick_room == "weaponary":
+            weaponary_room()
+            Path = "weaponary_room"
+            break
+        elif pick_room == "laboratory":
+            laboratory()
+            Path = "laboratory"
+            break
+        elif pick_room == "security":
+            security_room()
+            Path = "security_room"
+            break
+        elif pick_room == "supply":
+            supply_room()
+            Path = "supply_room"
+            break
+        elif pick_room == "evacuation":
+            evacuation_room()
+            Path = "evacuation_room"
+            break
+
+
+#1. we will make nar7 nar8 for 3 move by the player including the nar6. whoever wanna do something here please, my pleasure. its really tirin. <------
 #I already done all the room so you just need to make like a hub where the player can choose where they going. then we can paste to
 #nar7 and nar8 a bit of thinkering for dialogue then the ending. I know no one seeing this, I just need something to keep me sane.
+#2. YAY!! I done the hub. I just need to add a list variable to every save and we can check which room have they visited. the variable naming might be weird but
+#I'm the only one that have been coding for the story and room so It doesn't matter as long as I understand it. Im glad I don't need to do major change to the code
+#Now we can just make nar7 and nar8 and then ending. maybe I'll make nar9 put ending there so it atleast save the checkpoint and the player can continue when they died
+#we need battle system fast. the last option is we can just add dialogue and make like a scene for it maybe "you aim the gun and shoot the alien" idk man.
 
 def weaponary_room():
     say("The room was in shambled.\n" \
@@ -496,6 +543,7 @@ def weaponary_room():
         else:
             say("Invalid choice. Please choose 1, 2, or 3.")
             time.sleep(2)
+    visited.add("weaponary")
 
 def laboratory():
     say("You landed on your feet.\n" \
@@ -530,10 +578,13 @@ def laboratory():
         else:
             say("invalid choice. Choose 1, 2 or 3")
             time.sleep(2)
+    visited.add("laboratory")
 
 def security_room():
     say("You opened the door with the security card you found at the bridge")
     time.sleep(2)
+    if "keycard" in bag_items:
+        bag_items.remove("keycard")
     say("The room was a real messed.\n" \
     "It's like a massacre has happened here.")
     time.sleep(2)
@@ -573,6 +624,7 @@ def security_room():
         else:
             say("invalid choice. Please choose 1, 2, 3 or 4")
             time.sleep(2)
+    visited.add("security")
 
 def supply_room():
     say("You arrived at supplies room.")
@@ -618,6 +670,7 @@ def supply_room():
             time.sleep(2)
         else:
             say("Invalid choices")
+    visited.add("supply")
 
 def smokeScene():
     say("You run with all your might to the dock.")
@@ -750,6 +803,7 @@ def evacuation_room():
         else:
             say("Invalid choice. Please choose 1 or 2")
             time.sleep(2)
+    visited.add("evacuation")
 
 def ending():
     say("The Alien found you.")
@@ -931,7 +985,7 @@ def ending():
                 time.sleep(3)
                 exit()
     
-    save_checkpoint({"name":Name, "area":"Nar8", "bag":bag_items,"path":Path},Name)
+    save_checkpoint({"name":Name, "area":"Nar8", "bag":bag_items,"path":Path, "visited":list(visited)},Name)
 
 
 # Main part
