@@ -112,9 +112,9 @@ def render( narration, options,bag_items=None, timeout=None):
     print("-" * WIDTH)
 
     if timeout is None:
-        return input("Choose: ").strip()
+        return input("Input: ").strip()
     else:
-        return timed_input("Choose: ", timeout)
+        return timed_input("Input: ", timeout)
 
 #singular box  <---- ignore this.
 def SingleBox(text, ask_input=False, prompt=""):
@@ -163,7 +163,7 @@ def load_checkpoint(name):
 
 #related to checkpoint. basically the checkpoint numbering system.
 def reached(Area, checkpoint_num):
-    checkpoint = [None, "Nar1", "Nar2", "Nar3", "Nar4", "Nar5", "Nar6","Nar7 "]
+    checkpoint = [None, "Nar1", "Nar2", "Nar3", "Nar4", "Nar5", "Nar6","Nar7","Nar8","Nar9"]
     if Area is None:
         return True
     return checkpoint.index(Area) <= checkpoint_num
@@ -445,7 +445,129 @@ def nar6():
         time.sleep(1)
         say("You decided to explore the room laid ahead on you.")
         hub()
-        
+        say("You don't want to stay there much longer.")
+        if Path == "weaponary_room":
+            say("You hear a footstep outside the room.")
+            time.sleep(2)
+            say("You hold your breath to not alert the Alien")
+            time.sleep(1)
+            say("Sweat flow down your face.\n" \
+            "The Alien didn't notice you and move on.")
+            time.sleep(1)
+        else:
+            say("you get out of the room in complete silence.")
+        say("You got to the bridge safely and plan your next move")
+    
+    save_checkpoint({"name":Name, "area":"Nar7", "bag":bag_items, "path":Path, "visited":list(visited)}, Name)
+
+def nar7():
+    if reached(Area,7):
+        global Path
+        clear()
+        bag(bag_items)
+        say("You figured where you want to go.")
+        time.sleep(2)
+        hub()
+        say("A sound alert you.")
+        time.sleep(1)
+        if Path=="supply_room":
+            say("it was a foootstep of the Alien.")
+            time.sleep(1)
+            say("It seems the Alien is patrolling the area in search for you.")
+            say("You tried to leave but...")
+            time.sleep(2)
+            Action = render(bag_items=bag_items,narration="The alien is coming this way.",options="press anything to be quiet.",timeout=5)
+            if Action == None:
+                say("YOU DIDN'T STOP.")
+                time.sleep(1)
+                say("The alien notice you.\n" \
+                "You run for your life!")
+                time.sleep(1)
+                say("Suddenly you fall and can't get back up.")
+                time.sleep(1)
+                say("You feel something warm.")
+                time.sleep(1)
+                say("IT WAS YOUR BLOOD!")
+                say("You see a leg behind you\n" \
+                "it's yours.")
+                time.sleep(1)
+                say("you black out from the shock of losing your leg.")
+                time.sleep(1)
+                say("Game Over!")
+                time.sleep(5)
+                exit()
+            else:
+                say("You cover your mouth and hide in the room.")
+                time.sleep(1)
+                say("The Alien move past you while you cowering in fear.")
+                time.sleep(2)
+            say("You're safe now")
+        else:
+            say("It was just a mouse at the door.")
+            time.sleep(1)
+            say("The presence of the Alien is making you anxious.")
+        say("You left the room and go to the bridge.")
+    save_checkpoint({"name":Name, "area":"Nar8", "bag":bag_items, "path":Path, "visited":list(visited)}, Name)
+
+def nar8():
+    if reached(Area,8):
+        global Path
+        clear()
+        bag(bag_items)
+        say("You reached the bridge safely again.")
+        time.sleep(3)
+        say("You done taking your breath.\n" \
+        "You feel like closer to escape.")
+        time.sleep(1)
+        say("You plan your next move.")
+        hub()
+        time.sleep(2)
+        clear()
+        bag(bag_items)
+        if Path == "weaponary_room":
+            say("You see the Alien standing outside just a few feet from the entrance of the bridge.")
+            time.sleep(1)
+            say("The Alien is taking it sweet time waiting there.")
+            time.sleep(1)
+            say("...")
+            time.sleep(1)
+            say("...")
+            time.sleep(1)
+            say("...")
+            time.sleep(1)
+            say("You see an opening where the Alien is distracted by the sound across the hall.")
+            Action = render(bag_items=bag_items,narration="You tried to sneak into the bridge",options="press anything to sneak quietly to the bridge",timeout=5)
+            if Action == None:
+                say("You tried to sneak to the bridge but step on rubble and fall down.")
+                time.sleep(1)
+                say("You get back up.")
+                time.sleep(1)
+                say("You suddenly felt something in your stomach.")
+                time.sleep(1)
+                say("...")
+                time.sleep(1)
+                say("There's something piercing your stomach.")
+                time.sleep(1)
+                say("It was red soaked in blood." \
+                "The Alien retracted back its limb pulling you to it.")
+                time.sleep(1)
+                say("You can't muster up any strength and the last thing you see before losing conciousness is the mouth of the Monster in front of you.")
+                time.sleep(1)
+                say("You loss conciousness.")
+                time.sleep(1)
+                say("Game Over!")
+                time.sleep(5)
+                exit()
+            else:
+                say("You tiptoe to the bridge in complete silence.")
+            time.sleep(1)
+        else:
+            say("You leave the room and head straight to the bridge.")
+            time.sleep(1)
+        say("You got to the bridge safely.")
+    save_checkpoint({"name":Name, "area":"Nar9", "bag":bag_items, "path":Path, "visited":list(visited)}, Name)
+
+
 def hub():
     global Path
     room = ["weaponary","laboratory","security","supply","evacuation"]
@@ -453,7 +575,7 @@ def hub():
         have_room = [r for r in room if r not in visited]
 
         options = [f"{i+1}.{r}" for i, r in enumerate(have_room)]
-        Action = render(bag_items=bag_items,narration="There's a couple room you could explore",options=options)
+        Action = render(bag_items=bag_items,narration="Here is the room you could explore",options=options)
         
         try:
             Action_index = int(Action) -1
@@ -488,11 +610,15 @@ def hub():
 #I already done all the room so you just need to make like a hub where the player can choose where they going. then we can paste to
 #nar7 and nar8 a bit of thinkering for dialogue then the ending. I know no one seeing this, I just need something to keep me sane.
 #2. YAY!! I done the hub. I just need to add a list variable to every save and we can check which room have they visited. the variable naming might be weird but
-#I'm the only one that have been coding for the story and room so It doesn't matter as long as I understand it. Im glad I don't need to do major change to the code
+#I'm the only one that have been coding for the story path and room so It doesn't matter as long as I understand it. Im glad I don't need to do major change to the code
 #Now we can just make nar7 and nar8 and then ending. maybe I'll make nar9 put ending there so it atleast save the checkpoint and the player can continue when they died
 #we need battle system fast. the last option is we can just add dialogue and make like a scene for it maybe "you aim the gun and shoot the alien" idk man.
+#3. I just noticed that we reached the 1000 line. YAY for everyone working on this. as a reward for this, I will not be working on this for 1 day. HOORAY!
+#NEXT: We can finish the ending for real now. Adha please make the battle system, We running out of time now. the nar7 and 8 is pretty short unless
+#you get out of certain room where you get extra message and quick event. we will be testing this game for real after the ending finished with a bit of bug searching.
 
 def weaponary_room():
+    clear()
     say("The room was in shambled.\n" \
     "Dead bodies and scattered weapon.\n" \
     "You know what you got to do.\n" \
@@ -546,6 +672,7 @@ def weaponary_room():
     visited.add("weaponary")
 
 def laboratory():
+    clear()
     say("You landed on your feet.\n" \
     "The room looks like a laboratory or some sort.\n" \
     "There's a broken incubator, messed up table, dead scientist")
@@ -581,6 +708,7 @@ def laboratory():
     visited.add("laboratory")
 
 def security_room():
+    clear()
     say("You opened the door with the security card you found at the bridge")
     time.sleep(2)
     if "keycard" in bag_items:
@@ -627,6 +755,7 @@ def security_room():
     visited.add("security")
 
 def supply_room():
+    clear()
     say("You arrived at supplies room.")
     time.sleep(2)
     say("The room was a messed.")
@@ -782,6 +911,7 @@ def puzzled(max_tries):
         return True
 
 def evacuation_room():
+    clear()
     global puzzle
     say("You entered the emergency evacuation room.")
     time.sleep(2)
