@@ -1,3 +1,11 @@
+# *************************************************************************
+# Course: CSP1114 PROBLEM SOLVING AND PROGRAM DESIGN
+# Lecture / Lab Section: TC1L / TLXL
+# Trimester: 2610
+# Names: MEMBER_NAME_1 | MEMBER_NAME_2 | MEMBER_NAME_3 | MEMBER_NAME_4
+# IDs: MEMBER_ID_1 | MEMBER_ID_2 | MEMBER_ID_3 | MEMBER_ID_4
+# ************************************************************************
+
 import json
 import os
 import threading
@@ -17,6 +25,7 @@ WIDTH = 120
 BOX_HEIGHT = 10
 moveCounter = 0
 puzzle = False
+Health = 100
 
 RED = "\033[31m"
 GREEN = "\033[32m"
@@ -837,6 +846,10 @@ def smokeScene():
     say("A heavy cloud emerge and you go through it to lose the Alien")
     time.sleep(2)
 
+def battle():
+    alienHealth = 100
+    if 
+ 
 def puzzled(max_tries):
     global puzzle
     clear()
