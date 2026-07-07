@@ -623,20 +623,6 @@ def hub():
             Path = "evacuation_room"
             break
 
-
-#1. we will make nar7 nar8 for 3 move by the player including the nar6. whoever wanna do something here please, my pleasure. its really tirin. <------
-#I already done all the room so you just need to make like a hub where the player can choose where they going. then we can paste to
-#nar7 and nar8 a bit of thinkering for dialogue then the ending. I know no one seeing this, I just need something to keep me sane.
-#2. YAY!! I done the hub. I just need to add a list variable to every save and we can check which room have they visited. the variable naming might be weird but
-#I'm the only one that have been coding for the story path and room so It doesn't matter as long as I understand it. Im glad I don't need to do major change to the code
-#Now we can just make nar7 and nar8 and then ending. maybe I'll make nar9 put ending there so it atleast save the checkpoint and the player can continue when they died
-#we need battle system fast. the last option is we can just add dialogue and make like a scene for it maybe "you aim the gun and shoot the alien" idk man.
-#3. I just noticed that we reached the 1000 line. YAY for everyone working on this. as a reward for this, I will not be working on this for 1 day. HOORAY!
-#NEXT: We can finish the ending for real now. Adha please make the battle system, We running out of time now. the nar7 and 8 is pretty short unless
-#you get out of certain room where you get extra message and quick event. we will be testing this game for real after the ending finished with a bit of bug searching.
-#4. Yoo!!!!! I finally did it! I finshed everything. now its up to adha for the battle system. It was like 2 hour of works. Im glad it finished
-# Now I can finally rest. After this we can do bug fixing the game, I continue this tomorrow or somethinf.
-
 def weaponary_room():
     clear()
     say("The room was in shambled.\n" \
@@ -846,10 +832,6 @@ def smokeScene():
     say("A heavy cloud emerge and you go through it to lose the Alien")
     time.sleep(2)
 
-def battle():
-    alienHealth = 100
-    if 
- 
 def puzzled(max_tries):
     global puzzle
     clear()
@@ -859,11 +841,8 @@ def puzzled(max_tries):
     "yellow = blue\n")
     time.sleep(3)
 
-    # wires = [("blue","red"),("green","green"),("black","blue")]
-
     print("a small light show the wires.")
     attempt = max_tries
-    # for left, right in wires:
     solved = False
     while attempt > 0 and not solved:
         clear()
@@ -961,6 +940,70 @@ def evacuation_room():
             say("Invalid choice. Please choose 1 or 2")
             time.sleep(2)
     visited.add("evacuation")
+
+def battle():
+    global Health
+    alien_hp = 100
+
+    if "NTW-20" in bag_items:
+        attack = 35
+    elif "gun" in bag_items:
+        attack = 25
+    else:
+        attack = 15
+
+    if "vest" in bag_items:
+        defense = 10
+    else:
+        defense = 0
+
+    has_bomb = "bomb" in bag_items
+
+    while Health > 0 and alien_hp > 0:
+        options = ["1. Attack", "2. Defend"]
+        if has_bomb:
+            options.append("3. Use Bomb")
+
+        Action = render(bag_items=bag_items,
+            narration=f"Your Health: {Health}   Alien Health: {alien_hp}",
+            options=options)
+
+        valid_choices = ["1", "2", "3"] if has_bomb else ["1", "2"]
+        while Action not in valid_choices:
+            Action = input("Invalid choice. Please choose a valid option: ")
+
+        defended = False
+
+        if Action == "1":
+            alien_hp -= attack
+            say(f"You attack the Alien for {attack} damage.")
+        elif Action == "2":
+            defended = True
+            say("You brace yourself and defend.")
+        elif Action == "3":
+            alien_hp = 0
+            bag_items.remove("bomb")
+            has_bomb = False
+            say("You detonate the bomb, tearing the Alien apart.")
+
+        time.sleep(1)
+
+        if alien_hp <= 0:
+            break
+
+        alien_damage = 20 - defense
+        if defended:
+            alien_damage = alien_damage // 2
+        alien_damage = max(0, alien_damage)
+
+        Health -= alien_damage
+        say(f"The Alien strikes back for {alien_damage} damage.")
+        time.sleep(1)
+
+    if Health > 0:
+        return True
+    else:
+        return False
 
 def ending():
     if reached(Area, 9):
@@ -1099,35 +1142,40 @@ def ending():
                         "The Alien throw you off and shriek in pain.")
                         time.sleep(1)
                         say("You grab your weapon and ready to fight the monster.")
-                        
-                        #battle system
-                                                
-                        say("The lifeless body of the Alien calm you down.")
-                        time.sleep(2)
-                        say("After a while, You stand up and go to the bridge slowly.")
-                        time.sleep(1)
-                        say("Each step was like lifting a heavy dumbell.")
-                        time.sleep(1)
-                        say("You arrived at the control station in search for a chance that there's other people out there.")
-                        time.sleep(1)
-                        say("A voice message was playing")
-                        SingleBox("We receive your distress signal soldier.\n " \
-                        "We have sent our man to the battleship.\n" \
-                        "They will arrive soon so please hold on.")
-                        time.sleep(3)
-                        say("Your eyes lit up!")
-                        time.sleep(1)
-                        say("Your fell down, your leg feels like jelly.")
-                        time.sleep(1)
-                        say("The adrenaline rush has ended.")
-                        time.sleep(1)
-                        say("Your eyes feels heavy.")
-                        time.sleep(1)
-                        say("you lost conciousness.")
-                        time.sleep(3)
-                        SingleBox("You got Termiator Ending!")
-                        time.sleep(5)
-                        break
+
+                        if battle():
+                            say("The lifeless body of the Alien calm you down.")
+                            time.sleep(2)
+                            say("After a while, You stand up and go to the bridge slowly.")
+                            time.sleep(1)
+                            say("Each step was like lifting a heavy dumbell.")
+                            time.sleep(1)
+                            say("You arrived at the control station in search for a chance that there's other people out there.")
+                            time.sleep(1)
+                            say("A voice message was playing")
+                            SingleBox("We receive your distress signal soldier.\n " \
+                            "We have sent our man to the battleship.\n" \
+                            "They will arrive soon so please hold on.")
+                            time.sleep(3)
+                            say("Your eyes lit up!")
+                            time.sleep(1)
+                            say("Your fell down, your leg feels like jelly.")
+                            time.sleep(1)
+                            say("The adrenaline rush has ended.")
+                            time.sleep(1)
+                            say("Your eyes feels heavy.")
+                            time.sleep(1)
+                            say("you lost conciousness.")
+                            time.sleep(3)
+                            SingleBox("You got Termiator Ending!")
+                            time.sleep(5)
+                            break
+                        else:
+                            say("The Alien overpowers you.")
+                            time.sleep(2)
+                            say("Game Over!")
+                            time.sleep(5)
+                            exit()
                     
                     elif "bomb" in bag_items:
                         smokeScene()
@@ -1172,22 +1220,29 @@ def ending():
                         time.sleep(1)
                         say("You stand up and get ready to fight the Alien with whatever you have right now.")
                         time.sleep(1)
-                        say("The Alien move so fast its hard for you to see its movement.\n" \
-                        "The Alien swing his tentacle arm and you slide under him cutting his leg at that moment.")
-                        time.sleep(1)
-                        say("You look back and feel something push you.")
-                        time.sleep(1)
-                        say("You're in the air and the next thing you know is you got slammed to the wall\n" \
-                        "unable to move your leg.")
-                        time.sleep(1)
-                        say("In the last moment before you died, You turn on the bomb")
-                        time.sleep(1)
-                        say("'At least I can take him out with me'")
-                        time.sleep(1)
-                        say("You thought")
-                        SingleBox("You got Suicide Ending")
-                        time.sleep(5)
-                        break
+
+                        if battle():
+                            say("The lifeless body of the Alien calm you down.")
+                            time.sleep(2)
+                            say("You look back and feel something push you.")
+                            time.sleep(1)
+                            say("You're in the air and the next thing you know is you got slammed to the wall\n" \
+                            "unable to move your leg.")
+                            time.sleep(1)
+                            say("In the last moment before you died, You turn on the bomb")
+                            time.sleep(1)
+                            say("'At least I can take him out with me'")
+                            time.sleep(1)
+                            say("You thought")
+                            SingleBox("You got Suicide Ending")
+                            time.sleep(5)
+                            break
+                        else:
+                            say("The Alien overpowers you.")
+                            time.sleep(2)
+                            say("Game Over!")
+                            time.sleep(5)
+                            exit()
 
                     elif "gun" not in bag_items or "NTW-20" not in bag_items:
                         smokeScene()
@@ -1232,25 +1287,32 @@ def ending():
                         time.sleep(1)
                         say("You stand up and get ready to fight the Alien with whatever you have right now.")
                         time.sleep(1)
-                        say("The Alien move so fast its hard for you to see its movement.\n" \
-                        "The Alien swing his tentacle arm and you slide under him cutting his leg at that moment.")
-                        time.sleep(1)
-                        say("You look back and feel something push you.")
-                        time.sleep(1)
-                        say("You're in the air and the next thing you know is you got slammed to the wall\n" \
-                        "unable to move a single muscle.")
-                        time.sleep(1)
-                        say("In the last moment before you died, You ask yourself")
-                        time.sleep(1)
-                        say("Wh")
-                        time.sleep(0.5)
-                        say("Why")
-                        time.sleep(1)
-                        say("Why does it have to end like this.")
-                        time.sleep(2)
-                        say("Game Over!!")
-                        time.sleep(5)
-                        exit()
+
+                        if battle():
+                            say("The lifeless body of the Alien calm you down.")
+                            time.sleep(2)
+                            say("You look back and feel something push you.")
+                            time.sleep(1)
+                            say("You're in the air and the next thing you know is you got slammed to the wall\n" \
+                            "unable to move a single muscle.")
+                            time.sleep(1)
+                            say("In the last moment before you died, You ask yourself")
+                            time.sleep(1)
+                            say("Wh")
+                            time.sleep(0.5)
+                            say("Why")
+                            time.sleep(1)
+                            say("Why does it have to end like this.")
+                            time.sleep(2)
+                            say("Game Over!!")
+                            time.sleep(5)
+                            exit()
+                        else:
+                            say("The Alien overpowers you.")
+                            time.sleep(2)
+                            say("Game Over!")
+                            time.sleep(5)
+                            exit()
                         
                 elif"smokebomb" not in bag_items:
                     if "gun" in bag_items or "NTW-20" in bag_items:
@@ -1260,33 +1322,40 @@ def ending():
                         "You realised that you can't outrun the hunter.")
                         time.sleep(1)
                         say("You turn left on a junction and whip your weapon out aiming at the hall that the monster will eventually come.")
-                        #battle system
-                        say("The lifeless body of the Alien calm you down.")
-                        time.sleep(2)
-                        say("After a while, You stand up and go to the bridge slowly.")
-                        time.sleep(1)
-                        say("Each step was like lifting a heavy dumbell.")
-                        time.sleep(1)
-                        say("You arrived at the control station in search for a chance that there's other people out there.")
-                        time.sleep(1)
-                        say("A voice message was playing")
-                        SingleBox("We receive your distress signal soldier.\n " \
-                        "We have sent our man to the battleship.\n" \
-                        "They will arrive soon so please hold on.")
-                        time.sleep(3)
-                        say("Your eyes lit up!")
-                        time.sleep(1)
-                        say("Your fell down, your leg feels like jelly.")
-                        time.sleep(1)
-                        say("The adrenaline rush has ended.")
-                        time.sleep(1)
-                        say("Your eyes feels heavy.")
-                        time.sleep(1)
-                        say("you lost conciousness.")
-                        time.sleep(3)
-                        SingleBox("You got Termiator Ending!")
-                        time.sleep(5)
-                        break
+
+                        if battle():
+                            say("The lifeless body of the Alien calm you down.")
+                            time.sleep(2)
+                            say("After a while, You stand up and go to the bridge slowly.")
+                            time.sleep(1)
+                            say("Each step was like lifting a heavy dumbell.")
+                            time.sleep(1)
+                            say("You arrived at the control station in search for a chance that there's other people out there.")
+                            time.sleep(1)
+                            say("A voice message was playing")
+                            SingleBox("We receive your distress signal soldier.\n " \
+                            "We have sent our man to the battleship.\n" \
+                            "They will arrive soon so please hold on.")
+                            time.sleep(3)
+                            say("Your eyes lit up!")
+                            time.sleep(1)
+                            say("Your fell down, your leg feels like jelly.")
+                            time.sleep(1)
+                            say("The adrenaline rush has ended.")
+                            time.sleep(1)
+                            say("Your eyes feels heavy.")
+                            time.sleep(1)
+                            say("you lost conciousness.")
+                            time.sleep(3)
+                            SingleBox("You got Termiator Ending!")
+                            time.sleep(5)
+                            break
+                        else:
+                            say("The Alien overpowers you.")
+                            time.sleep(2)
+                            say("Game Over!")
+                            time.sleep(5)
+                            exit()
                     
                     elif "bomb" in bag_items:
                         say("You keep running ahead as fast as you can.")
@@ -1383,33 +1452,40 @@ def ending():
                     if "NTW-20" in bag_items or "gun" in bag_items:
                         say("You look through the room but there's nothing that could help you")
                         say("You bring your weapon out and get arm yourself with courage to fight the monster outside the room.")
-                        #battle system
-                        say("The lifeless body of the Alien calm you down.")
-                        time.sleep(2)
-                        say("After a while, You stand up and go to the bridge slowly.")
-                        time.sleep(1)
-                        say("Each step was like lifting a heavy dumbell.")
-                        time.sleep(1)
-                        say("You arrived at the control station in search for a chance that there's other people out there.")
-                        time.sleep(1)
-                        say("A voice message was playing")
-                        SingleBox("We receive your distress signal soldier.\n " \
-                        "We have sent our man to the battleship.\n" \
-                        "They will arrive soon so please hold on.")
-                        time.sleep(3)
-                        say("Your eyes lit up!")
-                        time.sleep(1)
-                        say("Your fell down, your leg feels like jelly.")
-                        time.sleep(1)
-                        say("The adrenaline rush has ended.")
-                        time.sleep(1)
-                        say("Your eyes feels heavy.")
-                        time.sleep(1)
-                        say("you lost conciousness.")
-                        time.sleep(3)
-                        SingleBox("You got Termiator Ending!")
-                        time.sleep(5)
-                        break
+
+                        if battle():
+                            say("The lifeless body of the Alien calm you down.")
+                            time.sleep(2)
+                            say("After a while, You stand up and go to the bridge slowly.")
+                            time.sleep(1)
+                            say("Each step was like lifting a heavy dumbell.")
+                            time.sleep(1)
+                            say("You arrived at the control station in search for a chance that there's other people out there.")
+                            time.sleep(1)
+                            say("A voice message was playing")
+                            SingleBox("We receive your distress signal soldier.\n " \
+                            "We have sent our man to the battleship.\n" \
+                            "They will arrive soon so please hold on.")
+                            time.sleep(3)
+                            say("Your eyes lit up!")
+                            time.sleep(1)
+                            say("Your fell down, your leg feels like jelly.")
+                            time.sleep(1)
+                            say("The adrenaline rush has ended.")
+                            time.sleep(1)
+                            say("Your eyes feels heavy.")
+                            time.sleep(1)
+                            say("you lost conciousness.")
+                            time.sleep(3)
+                            SingleBox("You got Termiator Ending!")
+                            time.sleep(5)
+                            break
+                        else:
+                            say("The Alien overpowers you.")
+                            time.sleep(2)
+                            say("Game Over!")
+                            time.sleep(5)
+                            exit()
                     elif "bomb" in bag_items:
                         say("You look through the room but there's nothing that could help you")
                         time.sleep(1)
