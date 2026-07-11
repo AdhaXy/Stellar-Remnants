@@ -136,13 +136,13 @@ def SingleBox(text, ask_input=False, prompt=""):
         print("|" + " " * (WIDTH - 2) + "|")
     
     # Text row (centered)
-    print(f"|  {text.center(WIDTH - 4)} |")
+    print(f"|  {text.center(WIDTH - 5)} |")
     
     # Empty row between text and input
     print("|" + " " * (WIDTH - 2) + "|")
     
     if ask_input:
-        user_input = input(f"|  {prompt}")
+        user_input = input(f"|  {prompt}" .ljust(WIDTH - 2) + " |")
         # Draw bottom AFTER input
         for _ in range(BOX_HEIGHT // 2 - 1):
             print("|" + " " * (WIDTH - 2) + "|")
@@ -176,6 +176,16 @@ def reached(Area, checkpoint_num):
     if Area is None:
         return True
     return checkpoint.index(Area) <= checkpoint_num
+
+def exits(text,end=False):
+    if end:
+        SingleBox("You got an ending! \n" + text , ask_input=True, prompt="press enter to exit")
+        time.sleep(5)
+        exit()
+    else:
+        SingleBox("Game over!!\n" + text , ask_input=True ,prompt="press enter to exit")
+        time.sleep(3)
+        exit()
 
 def main_menu():
     while True:
@@ -238,10 +248,10 @@ def main_menu():
                     temp = False
 
 def gameOver():
-    input = input("Would you like to retry? (Yes : y/No : n): ")
+    input = input("Would you like to retry? (yes/no): ")
     input2 = input.lower()
 
-    while input2 not in ["y", "n"]:
+    while input2 not in ["y", "yes" "n", "no"]:
         input = input("Invalid input. Please enter 'y' or 'n'")
         input2 = input.lower()
     
@@ -251,7 +261,43 @@ def gameOver():
     
 
 #===============================================FUNCTION===========================================================
+def smoke():
+    print("⠀⠀⢤⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡄⠀⠀⠀⢀⣀⣤⣤⣤⣤⣀⣠⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣤⠀⠀\n \
+    ⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣤⣤⠤⠤⢤⣄⣠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣷⣦⡀⠀⢀⡀⠀⠀⠀⠀⠀⠀⠀⠀  \n \
+    ⠀⠀⠀⠀⠀⢀⣤⡶⢛⡭⠖⠚⠛⡿⠶⢶⣿⣿⡿⠛⠛⣉⣀⣀⣀⠀⠉⠻⣷⣾⣿⣿⣷⡄⠀⠀⠀⠀⠀⠀\n \
+    ⠀⠀⠀⠀⣰⡿⢃⡼⠛⠀⠀⣀⣴⣶⣶⣾⣿⣿⣦⣘⣿⣿⣿⣿⣿⣿⣦⡄⠸⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀ \n \
+    ⠀⠀⠀⢰⣿⣁⠊⡋⠀⠀⣼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡄⠛⠻⢿⣿⡿⢦⣄⡀⠀⠀⠀ \n \
+    ⢠⣴⣤⣾⣿⢿⣿⣿⣿⣷⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣦⡀⣟⣀⣈⣿⣿⣦⣤⡄ \n \
+    ⠈⠉⠉⠉⣻⠟⠉⠀⠀⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠛⢻⣿⣿⣿⡟⠃ \n \
+    ⠀⠀⠀⢰⠃⠀⠀⠀⠀⠀⠙⠻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠆⠀⠙⣿⣿⠇⠀ \n \
+    ⠀⠀⢀⠘⠀⠀⠀⠀⠦⢀⣴⣶⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠀⠀⠀⠛⠁⠀⠀ \n \
+    ⠀⠀⢸⣆⠀⠀⠀⠀⢰⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠁⠀⠀⢀⠇⠀⠀⠀ \n \
+    ⠀⠀⠀⠙⠀⠀⠀⠀⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠉⠀⠀⠀⠀⠈⠀⠀⠀⠀\n \
+    ⠀⠀⠉⠀⠀⠀⠀⠀⠀⢻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠃⣴⣶⣶⣦⡀⠀⠀⠉⠀⠀\n \
+    ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡟⣿⣿⣿⣿⡿⠿⢿⣿⣿⠀⠀⠀⠀⠀\n \
+    ⠀⠀⠀⠀⠀⠀⠀⢀⣤⠠⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣶⣶⣿⣿⣦⣄⠀⠀⠀\n \
+    ⠀⠀⠀⠀⠀⠴⠿⠿⠛⠓⠉⠛⠿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠛⠛⠉⠉⠛⠛⠛⠋⠀⠘⠛⠀⠀⠀\n \
+    ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠸⠟⠛⠛⠉⠉⠉⠉⠉⠉⠉⠉⠉⠁⠛⠶⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀")
 
+def jet():
+    print("⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣠⣤⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n \
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣿⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡤⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀ \n \
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⣿⣿⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣼⡽⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n \
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣿⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣾⡟⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n \
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣀⣸⣿⣿⣿⣧⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣿⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n \
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠀⢸⣿⣿⣿⣿⠐⠒⠲⠦⠤⣤⡀⠀⠀⠀⠀⠀⣰⣿⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n \
+⠀⠀⠀⠀⠀⠀⠀⠀⣔⡲⠧⠦⠦⢶⣶⣠⣀⣀⣄⡀⠠⠀⠀⠂⢀⣀⣸⣿⣿⠿⢛⣡⠄⣠⣤⣶⣿⣷⠀⠀⠀⠀⣼⣿⣟⠈⠁⠒⠒⠒⠒⠢⠤⠤⠤⡄⠀⠀⠀⠀\n \
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠉⠛⠛⠒⠋⠀⠴⠌⠉⠁⠰⢟⣻⣷⣿⣿⣿⣿⣿⣿⣧⡀⢀⣾⣿⣿⣟⣁⣀⠀⠤⠤⠤⠄⠀⠀⠉⠀⠀⠀⠀⠀\n \
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣀⣠⣙⣽⣿⣷⣿⣿⣿⣿⣿⡿⠿⢍⣛⣟⣿⣾⣿⣿⣧⣄⣀⣀⡀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n \
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠁⠆⣀⣀⠔⠀⠀⠀⠀⢀⣤⣷⣿⣿⣾⣿⣿⣿⣿⣿⣿⣿⡟⠛⢮⠵⠞⠉⠉⠁⠀⠀⠀⠀⠀⠉⠁⠀⠀⢀⣁⣀⡀⠀⠀⠀⣠⠀⣤⡄\n \
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⠠⠆⠂⠐⢾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⢋⣰⣾⡿⠛⠀⠀⢀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣉⣈⣁⣠⣠⣬⡾⠋⠀\n \
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠉⠀⠀⠀⠀⠰⣼⣿⣿⣿⣿⣿⣿⣿⣿⢟⣡⣾⣿⣿⣿⠧⠴⠒⠒⠙⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠉⠉⠉⠉⠉⠉⠁⠀⠀\n \
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢂⠀⣼⣿⣿⣿⣿⣿⣿⣿⣏⣴⣿⣿⢿⠯⠓⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n \
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣠⣾⣿⣿⣿⣿⡿⠁⢻⣿⣿⢟⢫⡕⡁⡴⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n \
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣶⣶⣿⣿⣿⣿⠿⠋⣿⡋⠉⠀⠀⠀⢠⣾⡿⠅⠝⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n \
+⠀⠀⠀⠀⠀⠀⠀⠀⢠⣾⣿⣿⣿⣿⡿⠋⠁⡘⡘⠘⠀⠀⠀⠀⠀⠈⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n \
+⠀⠀⠀⠀⠀⠀⠀⣰⣿⣿⣿⣿⣟⠍⣂⠀⠀⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n \
+⠀⠀⠀⠀⠀⠀⠴⠿⠟⠛⠛⠁⠉⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀")
 #===============================================Story===========================================================
 
 SingleBox("Welcome to the game!", ask_input=True, prompt="Press enter to start...")
@@ -280,15 +326,15 @@ def intro():
         Name = SingleBox("You see an ID tag with your face beside you", ask_input=True, prompt="Enter your name: ")
 
         #Letting the user confirm their name
-        confirm = str(input("Confirm name? (yes : y/no : n): "))
+        confirm = str(input("Confirm name? (yes/no): "))
         confirm2 = confirm.lower()
-        while confirm2 not in ["y", "n"]:
-            print("Invalid choice, please enter y/n")
-            confirm = str(input("Confirm name? (y/n): "))
+        while confirm2 not in ["y", "n", "yes", "no"]:
+            print("Invalid choice, please enter yes/y/no/n")
+            confirm = str(input("Confirm name? (yes/no): "))
             confirm2 = confirm.lower()
-        if confirm2 == "y":
+        if confirm2 == "y" or confirm == "yes":
             Name = Name
-        elif confirm == "n":
+        elif confirm == "n" or confirm == "no":
             Name = input("Last try to enter your name: ")
     
         print("\n\n")
@@ -319,14 +365,14 @@ def nar1():
                 time.sleep(2)
                 say("You got killed.")
                 time.sleep(2)
-                say("GAME OVER")
                 time.sleep(3)
-                exit()
+                exits("Cause of death: Mauling by a hostile creature.")
 
 def nar2():
     if reached(Area, 2):
         while True:
-            Action = render(bag_items=bag_items,
+            Action = render(
+                bag_items=bag_items,
                 narration="You are trying to be as quiet as possible, hoping it won’t notice you.\n" 
                 "You see a huge black-in-colored aliens biting and tearing apart body.\n" 
                 "You got shocked and scared. You decided to leave that area but you stepped on a piece of glass on the floor.\n" 
@@ -335,14 +381,17 @@ def nar2():
                 "You start to run as fast as you can.\n" 
                 "You see a corner ahead and take your chance to lost the monster.\n" 
                 "There's a locker in front of you and a door just a few meters away.\n" 
-                "What will you do? Hide now or try to get into the room and a risk getting caught by the monster.\n",
-                options=["1.hide into the locker after the corner","2.Run into the room a few meters away"],timeout=10)
+                "What will you do? Hide now or try to get into the room and a risk getting caught by the monster.\n"
+                "!QUICK YOU HAVE ONLY A FEW SECONDS TO MAKE YOUR DECISIONS!\n",
+                options=["1.hide into the locker after the corner","2.Run into the room a few meters away"],
+                timeout=10
+                )
                 
             if Action == None:
                 say("you missed every hiding spot and got into a dead end" \
                 "\nGame Over")
                 time.sleep(3)
-                exit()
+                exits("Traumatic brain injury")
             elif Action == "1":
                 say("You hide in the locker and close the door." \
                 "\nThe alien passed you" \
@@ -453,6 +502,7 @@ def nar6():
         say("You think about your next move.")
         time.sleep(1)
         say("You decided to explore the room laid ahead on you.")
+        time.sleep(2)
         hub()
         time.sleep(2)
         clear()
@@ -472,7 +522,7 @@ def nar6():
         else:
              say("You don't want to stay here much longer.")
         say("You got to the bridge safely and plan your next move")
-    
+    time.sleep(3)
     save_checkpoint({"name":Name, "area":"Nar7", "bag":bag_items, "path":Path, "visited":list(visited)}, Name)
 
 def nar7():
@@ -510,9 +560,8 @@ def nar7():
                 time.sleep(1)
                 say("you black out from the shock of losing your leg.")
                 time.sleep(1)
-                say("Game Over!")
                 time.sleep(5)
-                exit()
+                exits("Traumatic amputation with severe blood loss.")
             else:
                 say("You cover your mouth and hide in the room.")
                 time.sleep(1)
@@ -526,6 +575,7 @@ def nar7():
             time.sleep(1)
             say("The presence of the Alien is making you anxious.")
         say("You left the room and go to the bridge.")
+        time.sleep(2)
     save_checkpoint({"name":Name, "area":"Nar8", "bag":bag_items, "path":Path, "visited":list(visited)}, Name)
 
 def nar8():
@@ -539,6 +589,7 @@ def nar8():
         "You feel like closer to escape.")
         time.sleep(1)
         say("You plan your next move.")
+        time.sleep(2)
         hub()
         time.sleep(2)
         clear()
@@ -574,9 +625,8 @@ def nar8():
                 time.sleep(1)
                 say("You loss conciousness.")
                 time.sleep(1)
-                say("Game Over!")
                 time.sleep(5)
-                exit()
+                exits("Penetrating abdominal trauma.")
             else:
                 say("You tiptoe to the bridge in complete silence.")
             time.sleep(1)
@@ -584,6 +634,7 @@ def nar8():
             say("You leave the room and head straight to the bridge.")
             time.sleep(1)
         say("You got to the bridge safely.")
+        time.sleep(3)
     save_checkpoint({"name":Name, "area":"Nar9", "bag":bag_items, "path":Path, "visited":list(visited)}, Name)
 
 def hub():
@@ -658,11 +709,13 @@ def weaponary_room():
                 else:
                     say("you failed to open the chest.")
             moveCounter -= 1
+            time.sleep(2)
         elif Action == "2":
             say("You took the gun with you.")
             if "gun" not in bag_items:
                 bag_items.append("gun")
             moveCounter -= 1
+            time.sleep(2)
         elif Action == "3":
             say("You checked the armour shelf and found a kevlar vest.") 
             if "vest" not in bag_items:
@@ -670,11 +723,12 @@ def weaponary_room():
                 bag_items.append("vest")
             elif "vest" in bag_items:
                 say("You already have a vest")
-            time.sleep(2)
             moveCounter -= 1
+            time.sleep(2)
         else:
             say("Invalid choice. Please choose 1, 2, or 3.")
             time.sleep(2)
+    time.sleep(2)
     visited.add("weaponary")
 
 def laboratory():
@@ -711,6 +765,7 @@ def laboratory():
         else:
             say("invalid choice. Choose 1, 2 or 3")
             time.sleep(2)
+    time.sleep(2)
     visited.add("laboratory")
 
 def security_room():
@@ -758,6 +813,7 @@ def security_room():
         else:
             say("invalid choice. Please choose 1, 2, 3 or 4")
             time.sleep(2)
+    time.sleep(2)
     visited.add("security")
 
 def supply_room():
@@ -808,15 +864,18 @@ def supply_room():
             time.sleep(2)
         else:
             say("Invalid choices")
+            time.sleep(2)
+    time.sleep(2)
     visited.add("supply")
 
+#smoke art scene
 def smokeScene():
     say("You run with all your might to escape the Alien.")
     time.sleep(2)
     say("But the Alien is starting to catch up.\n" \
     "So you throw your smoke bomb to confuse the Alien.")
     time.sleep(2)
-    bag(bag_items)
+
     print("\n")
     SingleBox("Throw the smoke bomb",ask_input=True,prompt="Press anything")
     time.sleep(2)
@@ -830,24 +889,22 @@ def smokeScene():
     say("poof!") 
     time.sleep(1)
     say("A heavy cloud emerge and you go through it to lose the Alien")
-    time.sleep(2)
+    time.sleep(3)
 
 def puzzled(max_tries):
     global puzzle
     clear()
-    print("U picked up a card that show a hint.\n" \
+    say("U picked up a card that show a hint.\n" \
     "Blue = red\n" \
     "green = green\n" \
     "yellow = blue\n")
-    time.sleep(3)
+    time.sleep(5)
 
     print("a small light show the wires.")
     attempt = max_tries
     solved = False
     while attempt > 0 and not solved:
-        clear()
-        print( blue("NTW"))
-        choice = render(narration=red("-20") + "\n" + blue("Here") + "\n" + green("123"),
+        choice = render(narration=blue("NTW") + "  ==\n\n" + red("-20") + "\n" + blue("Here") + "\n" + green("123"),
                 options=["1.red","2.blue","3.green"])
         if choice == "1":
             solved = True 
@@ -867,9 +924,7 @@ def puzzled(max_tries):
             say("Invalid choice. Please pick 1, 2, or 3")
     solved = False
     while attempt > 0 and not solved:
-        clear()
-        print( green("9 + 10"))
-        choice = render(narration=yellow("19") + "\n" + red("no math") + "\n" + green("21"),
+        choice = render(narration=green("9 + 10") + "  ==\n\n" + yellow("19") + "\n" + red("no math") + "\n" + green("21"),
                 options=["1.yellow","2.red","3.green"])
         if choice == "3":
             solved = True 
@@ -888,10 +943,8 @@ def puzzled(max_tries):
         else:
             say("Invalid choice. Please pick 1, 2, or 3")
     solved = False
-    while attempt > 0 and not solved:
-        clear()
-        print( yellow("H20"))
-        choice = render(narration=red("Hidrogen") + "\n" + blue("water") + "\n" + yellow("answer"),
+    while attempt > 0 and not solved:   
+        choice = render(narration=yellow("H20") + "  ==\n\n" + red("Hidrogen") + "\n" + blue("water") + "\n" + yellow("answer"),
                 options=["1.red","2.blue","3.yellow"])
         if choice == "2":
             solved = True 
@@ -930,7 +983,9 @@ def evacuation_room():
             options=["1.try to open the escape pod","2.leave"])
 
         if Action == "1":
+            time.sleep(2)
             puzzled(3)
+            time.sleep(2)
 
         elif Action == "2":
             say("You decided to leave")
@@ -941,9 +996,10 @@ def evacuation_room():
             time.sleep(2)
     visited.add("evacuation")
 
-def battle():
+def battle(Ahealth):
     global Health
-    alien_hp = 100
+    alien_hp = Ahealth
+    max_alien_hp = Ahealth
 
     if "NTW-20" in bag_items:
         attack = 35
@@ -954,29 +1010,53 @@ def battle():
 
     if "vest" in bag_items:
         defense = 10
-    else:
-        defense = 0
-
-    has_bomb = "bomb" in bag_items
+    else: defense = 0
+    
+    if "bomb" in bag_items:
+        has_bomb = True
+    else: 
+        has_bomb = False
+    
+    if "medkit" in bag_items:
+        has_medkit = True
+    else: 
+        has_medkit = False
 
     while Health > 0 and alien_hp > 0:
         options = ["1. Attack", "2. Defend"]
+
+        index = 0
         if has_bomb:
+            index += 1
             options.append("3. Use Bomb")
+        if has_medkit and index == 1:
+            options.append("4. Use Medkit")
+        else:
+            options.append("3. Use Medkit")
 
-        Action = render(bag_items=bag_items,
-            narration=f"Your Health: {Health}   Alien Health: {alien_hp}",
-            options=options)
+        enraged = alien_hp <= max_alien_hp * 0.3
+        status_line = f"Your Health: {Health}   Alien Health: {alien_hp}"
+        if enraged:
+            status_line += "\nThe Alien is enraged and hits harder!"
 
-        valid_choices = ["1", "2", "3"] if has_bomb else ["1", "2"]
+        Action = render(bag_items=bag_items, narration=status_line, options=options)
+
+        valid_choices = [str(i + 1) for i in range(len(options))]
         while Action not in valid_choices:
             Action = input("Invalid choice. Please choose a valid option: ")
 
         defended = False
 
         if Action == "1":
-            alien_hp -= attack
-            say(f"You attack the Alien for {attack} damage.")
+            if random.random() < 0.1:
+                say("You swing and miss completely!")
+            else:
+                dmg = attack + random.randint(-4, 6)
+                crit = random.random() < 0.15
+                if crit:
+                    dmg = int(dmg * 1.8)
+                alien_hp -= dmg
+                say(f"You attack the Alien for {dmg} damage!" + (" CRITICAL HIT!" if crit else ""))
         elif Action == "2":
             defended = True
             say("You brace yourself and defend.")
@@ -985,25 +1065,28 @@ def battle():
             bag_items.remove("bomb")
             has_bomb = False
             say("You detonate the bomb, tearing the Alien apart.")
+        elif Action == "4":
+            heal = random.randint(15, 25)
+            Health += heal
+            bag_items.remove("medkit")
+            has_medkit = False
+            say(f"You use the medkit and recover {heal} health.")
 
         time.sleep(1)
 
         if alien_hp <= 0:
             break
 
-        alien_damage = 20 - defense
+        base_damage = random.randint(15, 20 + (10 if enraged else 0))
+        alien_damage = max(0, base_damage - defense)
         if defended:
             alien_damage = alien_damage // 2
-        alien_damage = max(0, alien_damage)
 
         Health -= alien_damage
         say(f"The Alien strikes back for {alien_damage} damage.")
         time.sleep(1)
 
-    if Health > 0:
-        return True
-    else:
-        return False
+    return Health > 0
 
 def ending():
     if reached(Area, 9):
@@ -1018,6 +1101,8 @@ def ending():
                 "You choose to run to",
                 options=["1.Dock","2.Evacuation room","3.Security room"], timeout=10)
             
+            time.sleep(3)
+            clear()
             #if user choose dock
             if Action == "1":
                 if "smokebomb" in bag_items:
@@ -1041,7 +1126,7 @@ def ending():
                         print("-----------------------------------------------------------------------------------------" \
                         "--------------------------------")
                         time.sleep(7)
-                        break
+                        exits("You escaped the Alien",end=True)
 
                     elif "gate_dock" in bag_items and "bomb" in bag_items and "jet_key" not in bag_items:
                         smokeScene()
@@ -1056,8 +1141,8 @@ def ending():
                         time.sleep(3)
                         clear()
                         SingleBox("You got Suicide Ending!")
-                        time.sleep(5)
-                        break
+                        time.sleep(5) 
+                        exits("You sacrifice youself for greater good",end=True)
 
                     elif "gate_dock" in bag_items and "jet_key" not in bag_items:
                         smokeScene()
@@ -1068,8 +1153,9 @@ def ending():
                         "It got in!")
                         time.sleep(1)
                         say("You tried to get your weapon out but the Alien is faster than you thought, killing you in a split second.")
+                        time.sleep(2)
                         time.sleep(5)
-                        exit()     
+                        exits("Decapitation.")     
                         
                     elif "gate_dock" not in bag_items and "bomb" in bag_items:
                         smokeScene()
@@ -1078,14 +1164,14 @@ def ending():
                         time.sleep(3)
                         SingleBox("You got Suicide Ending")
                         time.sleep(5)
-                        break
+                        exits("You sacrifice youself for greater good",end=True)
 
                     elif "gate_dock" not in bag_items and "bomb" not in bag_items:
                         smokeScene()
                         say("You got to the gate but it won't open.\n" \
                         "The Alien catch up and kill you.")
                         time.sleep(5)
-                        exit()
+                        exits("Explosion.")
 
                 elif"smokebomb" not in bag_items:
                     say("You tried to run as fast as you can without looking back.")
@@ -1093,8 +1179,7 @@ def ending():
                     say("Suddenly you was on the ground and see your body without a head.")
                     time.sleep(1)
                     say("You lost conciousness.")
-                    say("Game over!!!")
-                    exit()
+                    exits("Fatal mauling.")
 
             #if user choose evacuation room
             elif Action == "2":
@@ -1117,7 +1202,7 @@ def ending():
                                 say("You didn't get to open it.")
                                 time.sleep(1)
                                 say("The alien stab you in the head immediately killing you.")
-                                exit()
+                                exits("Explosion.")
                         say("The door opened and you get inside.")
                         time.sleep(1)
                         say("You slammed the door shut and start turning on the escape pod")
@@ -1143,7 +1228,7 @@ def ending():
                         time.sleep(1)
                         say("You grab your weapon and ready to fight the monster.")
 
-                        if battle():
+                        if battle(100):
                             say("The lifeless body of the Alien calm you down.")
                             time.sleep(2)
                             say("After a while, You stand up and go to the bridge slowly.")
@@ -1167,18 +1252,17 @@ def ending():
                             time.sleep(1)
                             say("you lost conciousness.")
                             time.sleep(3)
-                            SingleBox("You got Termiator Ending!")
+                            SingleBox("You got Terminator Ending!")
                             time.sleep(5)
-                            break
+                            exits("You win, at what cost?", end=True)
                         else:
                             say("The Alien overpowers you.")
                             time.sleep(2)
-                            say("Game Over!")
                             time.sleep(5)
-                            exit()
+                            exits("Fatal mauling.")
                     
                     elif "bomb" in bag_items:
-                        smokeScene()
+                        smokeScene("Decapitation.")
                         say("You run to the evacuation room to get to the escape pod.\n"\
                         "The hallway that was seemingly short before feels longer now and the monster is gaining up on you.")
                         time.sleep(1)
@@ -1194,7 +1278,7 @@ def ending():
                                 say("You didn't get to open it.")
                                 time.sleep(1)
                                 say("The alien stab you in the head immediately killing you.")
-                                exit()
+                                exits("Penetrating head trauma.")
                         say("The door opened and you get inside.")
                         time.sleep(1)
                         say("You slammed the door shut and start turning on the escape pod")
@@ -1221,7 +1305,7 @@ def ending():
                         say("You stand up and get ready to fight the Alien with whatever you have right now.")
                         time.sleep(1)
 
-                        if battle():
+                        if battle(100):
                             say("The lifeless body of the Alien calm you down.")
                             time.sleep(2)
                             say("You look back and feel something push you.")
@@ -1236,15 +1320,14 @@ def ending():
                             say("You thought")
                             SingleBox("You got Suicide Ending")
                             time.sleep(5)
-                            break
+                            exits("You killed both you and the Alien", end=True)
                         else:
                             say("The Alien overpowers you.")
                             time.sleep(2)
-                            say("Game Over!")
                             time.sleep(5)
-                            exit()
+                            exits("Fatal injuries from combat.")
 
-                    elif "gun" not in bag_items or "NTW-20" not in bag_items:
+                    elif "gun" not in bag_items and "NTW-20" not in bag_items:
                         smokeScene()
                         say("You run to the evacuation room to get to the escape pod.\n"\
                         "The hallway that was seemingly short before feels longer now and the monster is gaining up on you.")
@@ -1261,7 +1344,7 @@ def ending():
                                 say("You didn't get to open it.")
                                 time.sleep(1)
                                 say("The alien stab you in the head immediately killing you.")
-                                exit()
+                                exits("Penetrating head trauma.")
                         say("The door opened and you get inside.")
                         time.sleep(1)
                         say("You slammed the door shut and start turning on the escape pod")
@@ -1287,32 +1370,20 @@ def ending():
                         time.sleep(1)
                         say("You stand up and get ready to fight the Alien with whatever you have right now.")
                         time.sleep(1)
-
-                        if battle():
-                            say("The lifeless body of the Alien calm you down.")
-                            time.sleep(2)
-                            say("You look back and feel something push you.")
-                            time.sleep(1)
-                            say("You're in the air and the next thing you know is you got slammed to the wall\n" \
-                            "unable to move a single muscle.")
-                            time.sleep(1)
-                            say("In the last moment before you died, You ask yourself")
-                            time.sleep(1)
-                            say("Wh")
-                            time.sleep(0.5)
-                            say("Why")
-                            time.sleep(1)
-                            say("Why does it have to end like this.")
-                            time.sleep(2)
-                            say("Game Over!!")
-                            time.sleep(5)
-                            exit()
-                        else:
-                            say("The Alien overpowers you.")
-                            time.sleep(2)
-                            say("Game Over!")
-                            time.sleep(5)
-                            exit()
+                        say("You look back and feel something push you.")
+                        time.sleep(1)
+                        say("You're in the air and the next thing you know is you got slammed to the wall\n" \
+                        "unable to move a single muscle.")
+                        time.sleep(1)
+                        say("In the last moment before you died, You ask yourself")
+                        time.sleep(1)
+                        say("Wh")
+                        time.sleep(0.5)
+                        say("Why")
+                        time.sleep(1)
+                        say("Why does it have to end like this.")
+                        time.sleep(5)
+                        exits("Fatal injuries from combat.")
                         
                 elif"smokebomb" not in bag_items:
                     if "gun" in bag_items or "NTW-20" in bag_items:
@@ -1323,7 +1394,7 @@ def ending():
                         time.sleep(1)
                         say("You turn left on a junction and whip your weapon out aiming at the hall that the monster will eventually come.")
 
-                        if battle():
+                        if battle(Ahealth=100):
                             say("The lifeless body of the Alien calm you down.")
                             time.sleep(2)
                             say("After a while, You stand up and go to the bridge slowly.")
@@ -1347,15 +1418,14 @@ def ending():
                             time.sleep(1)
                             say("you lost conciousness.")
                             time.sleep(3)
-                            SingleBox("You got Termiator Ending!")
+                            SingleBox("You got Terminator Ending!")
                             time.sleep(5)
-                            break
+                            exits("You killed the Alien",end=True)
                         else:
                             say("The Alien overpowers you.")
                             time.sleep(2)
-                            say("Game Over!")
                             time.sleep(5)
-                            exit()
+                            exits("Fatal injuries from combat.")
                     
                     elif "bomb" in bag_items:
                         say("You keep running ahead as fast as you can.")
@@ -1383,7 +1453,7 @@ def ending():
                         time.sleep(2)
                         SingleBox("You got Suicide Ending")
                         time.sleep(5)
-                        break
+                        exits("You commit git hub",end=True)
 
                     elif "gun" not in bag_items or "NTW-20" not in bag_items:
                         say("You tried to run as fast as you can without looking back.")
@@ -1410,10 +1480,8 @@ def ending():
                             "In a flash, you got holes in your body.")
                             time.sleep(0.5)
                             say("You lost conciousness.")
-                            time.sleep(2)
-                            say("Game Over!!")
                             time.sleep(5)
-                            exit()
+                            exits("You for Donuted.")
 
                         elif Action == "2" or Action == None:
                             say("You keep running ahead as fast as you can.")
@@ -1435,10 +1503,8 @@ def ending():
                             say("The Alien is in front of you.")
                             time.sleep(1)
                             say("You closed your eyes accepting the fate lies ahead of you.")
-                            time.sleep(2)
-                            say("Game Over!")
                             time.sleep(5)
-                            exit()
+                            exits("Traumatic amputation with severe blood loss.")
 
             elif Action == "3":
                 if "smokebomb" in bag_items:
@@ -1451,9 +1517,11 @@ def ending():
                     say("The Alien is tearing through the door")
                     if "NTW-20" in bag_items or "gun" in bag_items:
                         say("You look through the room but there's nothing that could help you")
+                        time.sleep(2)
                         say("You bring your weapon out and get arm yourself with courage to fight the monster outside the room.")
+                        time.sleep(2)
 
-                        if battle():
+                        if battle(150):
                             say("The lifeless body of the Alien calm you down.")
                             time.sleep(2)
                             say("After a while, You stand up and go to the bridge slowly.")
@@ -1477,15 +1545,14 @@ def ending():
                             time.sleep(1)
                             say("you lost conciousness.")
                             time.sleep(3)
-                            SingleBox("You got Termiator Ending!")
+                            SingleBox("You got Terminator Ending!")
                             time.sleep(5)
-                            break
+                            exits("You won against the Alien", end=True)
                         else:
                             say("The Alien overpowers you.")
-                            time.sleep(2)
-                            say("Game Over!")
                             time.sleep(5)
-                            exit()
+                            exits("Multiple puncture wounds.")
+
                     elif "bomb" in bag_items:
                         say("You look through the room but there's nothing that could help you")
                         time.sleep(1)
@@ -1494,28 +1561,25 @@ def ending():
                         say("before it kills you, you detonate the bomb you got in the supplies room and" \
                         "destroy both you and the monster")
                         time.sleep(3)
-                        clear()
+                        clear("Traumatic amputation with severe blood loss.")
                         SingleBox("You got Suicide Ending!")
                         time.sleep(5)
-                        break
+                        exits("You blow yourself up.")
 
-
-                
                 elif"smokebomb" not in bag_items:
                     say("You tried to run as fast as you can without looking back.")
                     time.sleep(1)
                     say("Suddenly you was on the ground and see your body without a head.")
                     time.sleep(1)
                     say("You lost conciousness.")
-                    say("Game over!!!")
-                    exit()
+                    exits("Decapitation.")
 
             elif Action == None:
                 say("Your late decision lead to your demise.")
                 time.sleep(1)
                 say("You got pounded by the Alien and died")
                 time.sleep(3)
-                exit()
+                exits("The Alien leave a hole inside of you.")
         
         save_checkpoint({"name":Name, "area":"Nar10", "bag":bag_items,"path":Path, "visited":list(visited)},Name)
 
@@ -1530,43 +1594,3 @@ nar6()
 nar7()
 nar8()
 ending()
-
-# art placeholder
-
-def smoke():
-    print("⠀⠀⢤⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡄⠀⠀⠀⢀⣀⣤⣤⣤⣤⣀⣠⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣤⠀⠀\n \
-    ⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣤⣤⠤⠤⢤⣄⣠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣷⣦⡀⠀⢀⡀⠀⠀⠀⠀⠀⠀⠀⠀  \n \
-    ⠀⠀⠀⠀⠀⢀⣤⡶⢛⡭⠖⠚⠛⡿⠶⢶⣿⣿⡿⠛⠛⣉⣀⣀⣀⠀⠉⠻⣷⣾⣿⣿⣷⡄⠀⠀⠀⠀⠀⠀\n \
-    ⠀⠀⠀⠀⣰⡿⢃⡼⠛⠀⠀⣀⣴⣶⣶⣾⣿⣿⣦⣘⣿⣿⣿⣿⣿⣿⣦⡄⠸⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀ \n \
-    ⠀⠀⠀⢰⣿⣁⠊⡋⠀⠀⣼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡄⠛⠻⢿⣿⡿⢦⣄⡀⠀⠀⠀ \n \
-    ⢠⣴⣤⣾⣿⢿⣿⣿⣿⣷⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣦⡀⣟⣀⣈⣿⣿⣦⣤⡄ \n \
-    ⠈⠉⠉⠉⣻⠟⠉⠀⠀⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠛⢻⣿⣿⣿⡟⠃ \n \
-    ⠀⠀⠀⢰⠃⠀⠀⠀⠀⠀⠙⠻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠆⠀⠙⣿⣿⠇⠀ \n \
-    ⠀⠀⢀⠘⠀⠀⠀⠀⠦⢀⣴⣶⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠀⠀⠀⠛⠁⠀⠀ \n \
-    ⠀⠀⢸⣆⠀⠀⠀⠀⢰⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠁⠀⠀⢀⠇⠀⠀⠀ \n \
-    ⠀⠀⠀⠙⠀⠀⠀⠀⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠉⠀⠀⠀⠀⠈⠀⠀⠀⠀\n \
-    ⠀⠀⠉⠀⠀⠀⠀⠀⠀⢻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠃⣴⣶⣶⣦⡀⠀⠀⠉⠀⠀\n \
-    ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡟⣿⣿⣿⣿⡿⠿⢿⣿⣿⠀⠀⠀⠀⠀\n \
-    ⠀⠀⠀⠀⠀⠀⠀⢀⣤⠠⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣶⣶⣿⣿⣦⣄⠀⠀⠀\n \
-    ⠀⠀⠀⠀⠀⠴⠿⠿⠛⠓⠉⠛⠿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠛⠛⠉⠉⠛⠛⠛⠋⠀⠘⠛⠀⠀⠀\n \
-    ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠸⠟⠛⠛⠉⠉⠉⠉⠉⠉⠉⠉⠉⠁⠛⠶⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀")
-
-def jet():
-    print("⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣠⣤⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n \
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣿⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡤⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀ \n \
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⣿⣿⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣼⡽⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n \
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣿⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣾⡟⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n \
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣀⣸⣿⣿⣿⣧⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣿⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n \
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠀⢸⣿⣿⣿⣿⠐⠒⠲⠦⠤⣤⡀⠀⠀⠀⠀⠀⣰⣿⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n \
-⠀⠀⠀⠀⠀⠀⠀⠀⣔⡲⠧⠦⠦⢶⣶⣠⣀⣀⣄⡀⠠⠀⠀⠂⢀⣀⣸⣿⣿⠿⢛⣡⠄⣠⣤⣶⣿⣷⠀⠀⠀⠀⣼⣿⣟⠈⠁⠒⠒⠒⠒⠢⠤⠤⠤⡄⠀⠀⠀⠀\n \
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠉⠛⠛⠒⠋⠀⠴⠌⠉⠁⠰⢟⣻⣷⣿⣿⣿⣿⣿⣿⣧⡀⢀⣾⣿⣿⣟⣁⣀⠀⠤⠤⠤⠄⠀⠀⠉⠀⠀⠀⠀⠀\n \
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣀⣠⣙⣽⣿⣷⣿⣿⣿⣿⣿⡿⠿⢍⣛⣟⣿⣾⣿⣿⣧⣄⣀⣀⡀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n \
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠁⠆⣀⣀⠔⠀⠀⠀⠀⢀⣤⣷⣿⣿⣾⣿⣿⣿⣿⣿⣿⣿⡟⠛⢮⠵⠞⠉⠉⠁⠀⠀⠀⠀⠀⠉⠁⠀⠀⢀⣁⣀⡀⠀⠀⠀⣠⠀⣤⡄\n \
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⠠⠆⠂⠐⢾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⢋⣰⣾⡿⠛⠀⠀⢀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣉⣈⣁⣠⣠⣬⡾⠋⠀\n \
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠉⠀⠀⠀⠀⠰⣼⣿⣿⣿⣿⣿⣿⣿⣿⢟⣡⣾⣿⣿⣿⠧⠴⠒⠒⠙⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠉⠉⠉⠉⠉⠉⠁⠀⠀\n \
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢂⠀⣼⣿⣿⣿⣿⣿⣿⣿⣏⣴⣿⣿⢿⠯⠓⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n \
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣠⣾⣿⣿⣿⣿⡿⠁⢻⣿⣿⢟⢫⡕⡁⡴⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n \
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣶⣶⣿⣿⣿⣿⠿⠋⣿⡋⠉⠀⠀⠀⢠⣾⡿⠅⠝⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n \
-⠀⠀⠀⠀⠀⠀⠀⠀⢠⣾⣿⣿⣿⣿⡿⠋⠁⡘⡘⠘⠀⠀⠀⠀⠀⠈⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n \
-⠀⠀⠀⠀⠀⠀⠀⣰⣿⣿⣿⣿⣟⠍⣂⠀⠀⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n \
-⠀⠀⠀⠀⠀⠀⠴⠿⠟⠛⠛⠁⠉⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀")
