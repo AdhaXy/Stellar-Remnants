@@ -6,12 +6,15 @@
 # IDs: MEMBER_ID_1 | MEMBER_ID_2 | MEMBER_ID_3 | MEMBER_ID_4
 # ************************************************************************
 
+#========================================================================= 
+# Logic functions > Story functions > Room functions > battle/puzzle/ending function
+#=========================================================================
+
 import json
 import os
 import threading
 import time
 import random
-import textwrap
 from pathlib import Path
 
 # Automatically detects OS and clears the terminal at the start
@@ -37,7 +40,9 @@ RESET = "\033[0m"
 #===============================================VARIABLES=========================================================
 
 #===============================================FUNCTION===========================================================
-#the puzzle box color
+
+
+#=========Colours for puzzle's box=============
 def red(text):
     width = len(text) + 6
     result = RED + "┌" + "─" * width + "┐" +  "\n" + "|" + text.center(width) + "|" +  "\n" \
@@ -64,8 +69,11 @@ def yellow(text):
     result += "|" + text.center(width) + "|" +  "\n"
     result += "└" + "─" * width + "┘" +  RESET
     return result
+#=========Colours for puzzle's box=============
 
-#Typing animation
+
+#===============Text visual related functions==============
+#Typewriters effect
 def say(text):
     for char in text:
         print(char, end="", flush=True)
@@ -76,7 +84,7 @@ def say(text):
 def clear():
     os.system('clear' if os.name == 'posix' else 'cls')
 
-#timer function for input
+#Input time limit / game  ends if no input given after timeout 
 def timed_input(prompt, timeout=10):
     result = [None]
     
@@ -99,7 +107,7 @@ def bag(bag_items):
     print(f"  Bag: {', '.join(bag_items)}")
     print("-" * WIDTH)
 
-#Screen function  <--- the main screen supposedly 
+#Screen function
 def render( narration, options,bag_items=None, timeout=None):
     clear()
 
@@ -125,7 +133,7 @@ def render( narration, options,bag_items=None, timeout=None):
     else:
         return timed_input("Input: ", timeout)
 
-#singular box  <---- ignore this.
+#singular box
 def SingleBox(text, ask_input=False, prompt=""):
     
     # Top border
@@ -153,8 +161,11 @@ def SingleBox(text, ask_input=False, prompt=""):
             print("|" + " " * (WIDTH - 2) + "|")
         print("+" + "-" * (WIDTH - 2) + "+")
         time.sleep(3)
+#===============Text visual related functions==============
 
-#save checkpoint and load checkpoint functions (Cross-platform paths) 
+
+#save checkpoint and load checkpoint functions (Cross-platform paths)
+# CRUD: Update — overwrites existing save file with current progress
 def save_checkpoint(data, name):
     base_dir = os.path.dirname(os.path.abspath(__file__))
     save_file = os.path.join(base_dir, "SaveFile", f"{name}.json")
@@ -177,6 +188,7 @@ def reached(Area, checkpoint_num):
         return True
     return checkpoint.index(Area) <= checkpoint_num
 
+#Ending/Game over screens
 def exits(text,end=False):
     if end:
         SingleBox("You got an ending! \n" + text , ask_input=True, prompt="press enter to exit")
@@ -187,6 +199,7 @@ def exits(text,end=False):
         time.sleep(3)
         exit()
 
+# CRUD: Create (New Game), Read (Load Game), Delete (Delete Save)
 def main_menu():
     while True:
         temp = True
@@ -261,6 +274,9 @@ def gameOver():
     
 
 #===============================================FUNCTION===========================================================
+
+
+#===============================================ASCII Art==========================================================
 def smoke():
     print("⠀⠀⢤⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡄⠀⠀⠀⢀⣀⣤⣤⣤⣤⣀⣠⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣤⠀⠀\n \
     ⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣤⣤⠤⠤⢤⣄⣠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣷⣦⡀⠀⢀⡀⠀⠀⠀⠀⠀⠀⠀⠀  \n \
@@ -298,13 +314,18 @@ def jet():
 ⠀⠀⠀⠀⠀⠀⠀⠀⢠⣾⣿⣿⣿⣿⡿⠋⠁⡘⡘⠘⠀⠀⠀⠀⠀⠈⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n \
 ⠀⠀⠀⠀⠀⠀⠀⣰⣿⣿⣿⣿⣟⠍⣂⠀⠀⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n \
 ⠀⠀⠀⠀⠀⠀⠴⠿⠟⠛⠛⠁⠉⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀")
+#===============================================ASCII Art==========================================================
+
+
+
 #===============================================Story===========================================================
 
+#Intro
 SingleBox("Welcome to the game!", ask_input=True, prompt="Press enter to start...")
-Name, Area, bag_items, Path, visited= main_menu()
+Name, Area, bag_items, route, visited= main_menu()
 visited = set(visited)
 
-#START  <-- finish
+#START 
 def intro():
     global Name 
     if Area is None:  # New Game
@@ -339,9 +360,11 @@ def intro():
     
         print("\n\n")
         say((("The ID Tag showing that you are known as " + Name).center(WIDTH)))
-        save_checkpoint({"name": Name, "area": "Nar1", "bag":bag_items, "path": Path, "visited":list(visited)}, Name) #save
+        save_checkpoint({"name": Name, "area": "Nar1", "bag":bag_items, "path": route, "visited":list(visited)}, Name) #save
         time.sleep(3)
 
+
+#======================================NARRATION 1-8=======================================================
 def nar1():
     if reached(Area, 1):
         while True:
@@ -358,7 +381,7 @@ def nar1():
 
             if Action == "1":
                 say("You slowly and silently approach to the shadow.")
-                save_checkpoint({"name": Name, "area": "Nar2", "bag":bag_items, "path": Path, "visited":list(visited)}, Name) #save
+                save_checkpoint({"name": Name, "area": "Nar2", "bag":bag_items, "path": route, "visited":list(visited)}, Name) #save
                 break
             elif Action == "2":
                 say("You shout at the shadow. The shadow crawl quickly into your direction and jumped on you.")
@@ -398,11 +421,11 @@ def nar2():
                 "\nyou're saved.\nYou found an item in the locker and got into the room nearest to you.")
                 if "weaponary_key" not in bag_items:
                     bag_items.append("weaponary_key")
-                save_checkpoint({"name": Name,"area":"Nar3", "bag":bag_items, "path": Path, "visited":list(visited)},Name)
+                save_checkpoint({"name": Name,"area":"Nar3", "bag":bag_items, "path": route, "visited":list(visited)},Name)
                 break
             elif Action == "2":
                 say("you got into the room before the monster pass the corner")
-                save_checkpoint({"name": Name, "area": "Nar3", "bag":bag_items, "path": Path, "visited":list(visited)}, Name) #save
+                save_checkpoint({"name": Name, "area": "Nar3", "bag":bag_items, "path": route, "visited":list(visited)}, Name) #save
                 break
             else:
                 say("Invalid choice. Please choose 1 or 2.")
@@ -446,12 +469,12 @@ def nar3():
         time.sleep(1)
         say("you went to the vent and hear a crashing noise behind you.\n" \
         "You pick up the pace")
-        save_checkpoint({"name": Name, "area": "Nar4", "bag":bag_items, "path": Path, "visited":list(visited)}, Name)
+        save_checkpoint({"name": Name, "area": "Nar4", "bag":bag_items, "path": route, "visited":list(visited)}, Name)
         time.sleep(4) #save
 
 #("Alien is still chasing you at the back!")
 def nar4():
-    global Path
+    global route
     if reached(Area, 4):
         clear()
         bag(bag_items)
@@ -459,25 +482,25 @@ def nar4():
         time.sleep(3)
         if "screwdriver" in bag_items:
             say("The vent door open and you crawled out of the vent.")
-            Path = "weaponary_room"
+            route = "weaponary_room"
             time.sleep(2)
         else:
             say("The vent door can't be open.\n" \
             "You tried other exit.")
             time.sleep(2)
             say("You found another exit and crawled out of the vent.")
-            Path = "laboratory"
+            route = "laboratory"
             time.sleep(2)
-        save_checkpoint({"name": Name, "area": "Nar5", "bag":bag_items, "path": Path, "visited":list(visited)}, Name) #save
+        save_checkpoint({"name": Name, "area": "Nar5", "bag":bag_items, "path": route, "visited":list(visited)}, Name) #save
 
 def nar5():
     if reached(Area,5):
-        global Path
+        global route
         clear()
         bag(bag_items)
-        if Path == "weaponary_room":
+        if route == "weaponary_room":
             weaponary_room()
-        if Path == "laboratory":
+        if route == "laboratory":
             laboratory()
         say("\nYou hear a sound coming from the vent.\n" \
         "You get out of the room quickly.")
@@ -488,11 +511,11 @@ def nar5():
         say("There's a shiny thing at the table")
         say("You found a keycard with a security labeled on it")
         time.sleep(3)
-        save_checkpoint({"name":Name, "area":"Nar6", "bag":bag_items, "path":Path, "visited":list(visited)}, Name)
+        save_checkpoint({"name":Name, "area":"Nar6", "bag":bag_items, "path":route, "visited":list(visited)}, Name)
     
 def nar6():
     if reached(Area,6):
-        global Path
+        global route
         clear()
         bag(bag_items)
         say("You take the keycard in case you need it")
@@ -506,11 +529,11 @@ def nar6():
         hub()
         time.sleep(2)
         clear()
-        if Path == "laboratory":
+        if route == "laboratory":
             say("You hear something in the vent.")
             time.sleep(1)
             say("You decided to leave.")
-        elif Path == "weaponary_room":
+        elif route == "weaponary_room":
                 say("You hear a footstep outside the room.")
                 time.sleep(2)
                 say("You hold your breath to not alert the Alien")
@@ -523,11 +546,11 @@ def nar6():
              say("You don't want to stay here much longer.")
         say("You got to the bridge safely and plan your next move")
     time.sleep(3)
-    save_checkpoint({"name":Name, "area":"Nar7", "bag":bag_items, "path":Path, "visited":list(visited)}, Name)
+    save_checkpoint({"name":Name, "area":"Nar7", "bag":bag_items, "path":route, "visited":list(visited)}, Name)
 
 def nar7():
     if reached(Area,7):
-        global Path
+        global route
         clear()
         bag(bag_items)
         say("You figured where you want to go.")
@@ -537,7 +560,7 @@ def nar7():
         clear()
         say("A sound alert you.")
         time.sleep(1)
-        if Path=="supply_room":
+        if route=="supply_room":
             say("it was a foootstep of the Alien.")
             time.sleep(1)
             say("It seems the Alien is patrolling the area in search for you.")
@@ -568,19 +591,20 @@ def nar7():
                 say("The Alien move past you while you cowering in fear.")
                 time.sleep(2)
             say("You're safe now")
-        elif Path == "laboratory":
-            say()
+        elif route == "laboratory":
+            say("The faint hum of broken lab equipment fills the silence.\n"
+            "Nothing seems to be stirring, but the smell of chemicals makes you uneasy.")
         else:
             say("It was just a mouse at the door.")
             time.sleep(1)
             say("The presence of the Alien is making you anxious.")
         say("You left the room and go to the bridge.")
         time.sleep(2)
-    save_checkpoint({"name":Name, "area":"Nar8", "bag":bag_items, "path":Path, "visited":list(visited)}, Name)
+    save_checkpoint({"name":Name, "area":"Nar8", "bag":bag_items, "path":route, "visited":list(visited)}, Name)
 
 def nar8():
     if reached(Area,8):
-        global Path
+        global route
         clear()
         bag(bag_items)
         say("You reached the bridge safely again.")
@@ -594,7 +618,7 @@ def nar8():
         time.sleep(2)
         clear()
         bag(bag_items)
-        if Path == "weaponary_room":
+        if route == "weaponary_room":
             say("You see the Alien standing outside just a few feet from the entrance of the bridge.")
             time.sleep(1)
             say("The Alien is taking it sweet time waiting there.")
@@ -635,10 +659,13 @@ def nar8():
             time.sleep(1)
         say("You got to the bridge safely.")
         time.sleep(3)
-    save_checkpoint({"name":Name, "area":"Nar9", "bag":bag_items, "path":Path, "visited":list(visited)}, Name)
+    save_checkpoint({"name":Name, "area":"Nar9", "bag":bag_items, "path":route, "visited":list(visited)}, Name)
+#======================================NARRATION 1-8=======================================================
 
+
+#==============================ROOMS============================================
 def hub():
-    global Path
+    global route
     room = ["weaponary","laboratory","security","supply","evacuation"]
     while True:
         have_room = [r for r in room if r not in visited]
@@ -655,23 +682,23 @@ def hub():
 
         if pick_room == "weaponary":
             weaponary_room()
-            Path = "weaponary_room"
+            route = "weaponary_room"
             break
         elif pick_room == "laboratory":
             laboratory()
-            Path = "laboratory"
+            route = "laboratory"
             break
         elif pick_room == "security":
             security_room()
-            Path = "security_room"
+            route = "security_room"
             break
         elif pick_room == "supply":
             supply_room()
-            Path = "supply_room"
+            route = "supply_room"
             break
         elif pick_room == "evacuation":
             evacuation_room()
-            Path = "evacuation_room"
+            route = "evacuation_room"
             break
 
 def weaponary_room():
@@ -867,6 +894,8 @@ def supply_room():
             time.sleep(2)
     time.sleep(2)
     visited.add("supply")
+#==============================ROOMS============================================
+
 
 #smoke art scene
 def smokeScene():
@@ -894,13 +923,13 @@ def smokeScene():
 def puzzled(max_tries):
     global puzzle
     clear()
-    say("U picked up a card that show a hint.\n" \
+    say("You picked up a card that show a hint.\n" \
     "Blue = red\n" \
     "green = green\n" \
     "yellow = blue\n")
-    time.sleep(5)
+    time.sleep(7)
 
-    print("a small light show the wires.")
+    print("A small source lights up the wires.")
     attempt = max_tries
     solved = False
     while attempt > 0 and not solved:
@@ -923,6 +952,7 @@ def puzzled(max_tries):
         else:
             say("Invalid choice. Please pick 1, 2, or 3")
     solved = False
+
     while attempt > 0 and not solved:
         choice = render(narration=green("9 + 10") + "  ==\n\n" + yellow("19") + "\n" + red("no math") + "\n" + green("21"),
                 options=["1.yellow","2.red","3.green"])
@@ -1025,16 +1055,21 @@ def battle(Ahealth):
     while Health > 0 and alien_hp > 0:
         options = ["1. Attack", "2. Defend"]
 
-        index = 0
         if has_bomb:
-            index += 1
             options.append("3. Use Bomb")
-        if has_medkit and index == 1:
-            options.append("4. Use Medkit")
-        else:
-            options.append("3. Use Medkit")
 
-        enraged = alien_hp <= max_alien_hp * 0.3
+        if has_medkit and has_bomb:
+            options.append("4. Use Medkit")
+        elif has_medkit and not has_bomb:
+            options.append("3. Use Medkit")
+        else:
+            pass
+
+        if alien_hp <= (max_alien_hp * 0.3):
+            enraged = True
+        else: 
+            enraged =  False
+
         status_line = f"Your Health: {Health}   Alien Health: {alien_hp}"
         if enraged:
             status_line += "\nThe Alien is enraged and hits harder!"
@@ -1057,15 +1092,18 @@ def battle(Ahealth):
                     dmg = int(dmg * 1.8)
                 alien_hp -= dmg
                 say(f"You attack the Alien for {dmg} damage!" + (" CRITICAL HIT!" if crit else ""))
+
         elif Action == "2":
             defended = True
             say("You brace yourself and defend.")
-        elif Action == "3":
-            alien_hp = 0
+
+        elif Action == "3" and has_bomb:
+            alien_hp = 1
             bag_items.remove("bomb")
             has_bomb = False
-            say("You detonate the bomb, tearing the Alien apart.")
-        elif Action == "4":
+            say("You detonate the bomb, leaving the alien on its knees.")
+            
+        elif Action == "4" or (Action == "3" and has_medkit):
             heal = random.randint(15, 25)
             Health += heal
             bag_items.remove("medkit")
@@ -1088,6 +1126,7 @@ def battle(Ahealth):
 
     return Health > 0
 
+#==============Every ending==========================
 def ending():
     if reached(Area, 9):
         say("The Alien found you.")
@@ -1106,7 +1145,7 @@ def ending():
             #if user choose dock
             if Action == "1":
                 if "smokebomb" in bag_items:
-                    if "gate_dock" and "jet_key" in bag_items:
+                    if "gate_dock" in bag_items and "jet_key" in bag_items:
                         smokeScene()
                         say("You got to the dock and head into the Jet\n" \
                         "You didn't waste anytime to get it working.")
@@ -1262,7 +1301,7 @@ def ending():
                             exits("Fatal mauling.")
                     
                     elif "bomb" in bag_items:
-                        smokeScene("Decapitation.")
+                        smokeScene()
                         say("You run to the evacuation room to get to the escape pod.\n"\
                         "The hallway that was seemingly short before feels longer now and the monster is gaining up on you.")
                         time.sleep(1)
@@ -1561,7 +1600,7 @@ def ending():
                         say("before it kills you, you detonate the bomb you got in the supplies room and" \
                         "destroy both you and the monster")
                         time.sleep(3)
-                        clear("Traumatic amputation with severe blood loss.")
+                        clear()
                         SingleBox("You got Suicide Ending!")
                         time.sleep(5)
                         exits("You blow yourself up.")
@@ -1581,7 +1620,10 @@ def ending():
                 time.sleep(3)
                 exits("The Alien leave a hole inside of you.")
         
-        save_checkpoint({"name":Name, "area":"Nar10", "bag":bag_items,"path":Path, "visited":list(visited)},Name)
+        save_checkpoint({"name":Name, "area":"Nar10", "bag":bag_items,"path":route, "visited":list(visited)},Name)
+#==============Every ending==========================
+
+
 
 # Main part
 intro()
