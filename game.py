@@ -1,9 +1,9 @@
 # *************************************************************************
 # Course: CSP1114 PROBLEM SOLVING AND PROGRAM DESIGN
-# Lecture / Lab Section: TC1L / TLXL
+# Lecture / Lab Section: TC1L 
 # Trimester: 2610
-# Names: MEMBER_NAME_1 | MEMBER_NAME_2 | MEMBER_NAME_3 | MEMBER_NAME_4
-# IDs: MEMBER_ID_1 | MEMBER_ID_2 | MEMBER_ID_3 | MEMBER_ID_4
+# Names: Muhammad Zul Adha Bin Zulkafli | Abdul Aziz bin Mohd Fauzi | Goh Wei Xuan | Harieshanth Gandhi
+# IDs: 261FC260K4 | 261FC2608Q | 261FC260FJ | 261FC260GD
 # ************************************************************************
 
 #========================================================================= 
@@ -104,7 +104,7 @@ def timed_input(prompt, timeout=10):
 # dedicated bag when not using render
 def bag(bag_items):
     print("-" * WIDTH)
-    print(f"  Bag: {', '.join(bag_items)}")
+    print(f"  Bag: {', '.join(bag_items)}") 
     print("-" * WIDTH)
 
 #Screen function
@@ -135,23 +135,19 @@ def render( narration, options,bag_items=None, timeout=None):
 
 #singular box
 def SingleBox(text, ask_input=False, prompt=""):
-    
-    # Top border
     print("+" + "-" * (WIDTH - 2) + "+")
-    
-    # Empty rows on top for padding
+
     for _ in range(BOX_HEIGHT // 2 - 1):
         print("|" + " " * (WIDTH - 2) + "|")
-    
-    # Text row (centered)
-    print(f"|  {text.center(WIDTH - 5)} |")
-    
-    # Empty row between text and input
+
+    # Handle multi-line text properly
+    for line in text.split("\n"):
+        print(f"|  {line.center(WIDTH - 5)} |")
+
     print("|" + " " * (WIDTH - 2) + "|")
-    
+
     if ask_input:
-        user_input = input(f"|  {prompt}" .ljust(WIDTH - 2) + " |")
-        # Draw bottom AFTER input
+        user_input = input(f"|  {prompt}")
         for _ in range(BOX_HEIGHT // 2 - 1):
             print("|" + " " * (WIDTH - 2) + "|")
         print("+" + "-" * (WIDTH - 2) + "+")
@@ -183,7 +179,7 @@ def load_checkpoint(name):
 
 #related to checkpoint. basically the checkpoint numbering system.
 def reached(Area, checkpoint_num):
-    checkpoint = [None, "Nar1", "Nar2", "Nar3", "Nar4", "Nar5", "Nar6", "Nar7", "Nar8", "Nar9", "nar10"]
+    checkpoint = [None, "Nar1", "Nar2", "Nar3", "Nar4", "Nar5", "Nar6", "Nar7", "Nar8", "Nar9"]
     if Area is None:
         return True
     return checkpoint.index(Area) <= checkpoint_num
@@ -191,12 +187,10 @@ def reached(Area, checkpoint_num):
 #Ending/Game over screens
 def exits(text,end=False):
     if end:
-        SingleBox("You got an ending! \n" + text , ask_input=True, prompt="press enter to exit")
-        time.sleep(5)
+        SingleBox("You got an ending: " + text , ask_input=True, prompt="press enter to exit")
         exit()
     else:
-        SingleBox("Game over!!\n" + text , ask_input=True ,prompt="press enter to exit")
-        time.sleep(3)
+        SingleBox("Cause of death: " + text , ask_input=True ,prompt="press enter to exit")
         exit()
 
 # CRUD: Create (New Game), Read (Load Game), Delete (Delete Save)
@@ -258,21 +252,7 @@ def main_menu():
                     break
                 else:
                     say("No save file found with that name. Please try again.")
-                    temp = False
-
-def gameOver():
-    input = input("Would you like to retry? (yes/no): ")
-    input2 = input.lower()
-
-    while input2 not in ["y", "yes" "n", "no"]:
-        input = input("Invalid input. Please enter 'y' or 'n'")
-        input2 = input.lower()
-    
-    if input2 == "y":
-        pass
-    #im gonna pause here please someone help figure how to loop it if not idc ill sitll do it
-    
-
+                    temp = False 
 #===============================================FUNCTION===========================================================
 
 
@@ -315,8 +295,6 @@ def jet():
 ⠀⠀⠀⠀⠀⠀⠀⣰⣿⣿⣿⣿⣟⠍⣂⠀⠀⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n \
 ⠀⠀⠀⠀⠀⠀⠴⠿⠟⠛⠛⠁⠉⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀")
 #===============================================ASCII Art==========================================================
-
-
 
 #===============================================Story===========================================================
 
@@ -389,7 +367,7 @@ def nar1():
                 say("You got killed.")
                 time.sleep(2)
                 time.sleep(3)
-                exits("Cause of death: Mauling by a hostile creature.")
+                exits("Mauling by a hostile creature.")
 
 def nar2():
     if reached(Area, 2):
@@ -409,7 +387,7 @@ def nar2():
                 options=["1.hide into the locker after the corner","2.Run into the room a few meters away"],
                 timeout=10
                 )
-                
+   
             if Action == None:
                 say("you missed every hiding spot and got into a dead end" \
                 "\nGame Over")
@@ -785,8 +763,9 @@ def laboratory():
         elif Action == "3":
             say("You check out the scientist.\n" \
             "The scientist was still alive surprisingly and grab your arm.\n" \
-            "he says to take the documents before dying.\n" \
-            "You take note of this.")
+            "he give you a medkit.\n")
+            if "medkit" not in bag_items:
+                bag_items.append("medkit")
             moveCounter -= 1
             time.sleep(2)
         else:
@@ -1619,8 +1598,6 @@ def ending():
                 say("You got pounded by the Alien and died")
                 time.sleep(3)
                 exits("The Alien leave a hole inside of you.")
-        
-        save_checkpoint({"name":Name, "area":"Nar10", "bag":bag_items,"path":route, "visited":list(visited)},Name)
 #==============Every ending==========================
 
 
